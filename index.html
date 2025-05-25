@@ -3,12 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>내 토스 웹 앱</title>
+    <title>토스 웹 앱</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>환영합니다! 토스 웹 애플리케이션</h1>
-    <button>송금하기</button>
+    <header>
+        <h1>내 토스 대시보드</h1>
+    </header>
+
+    <section id="balance">
+        <h2>내 잔액: <span id="balance-amount">0 오이</span></h2>
+    </section>
+
+    <section id="transactions">
+        <button onclick="showTransferForm()">송금</button>
+        <button onclick="showDepositForm()">입금</button>
+        <button onclick="showLoanForm()">대출</button>
+    </section>
+
+    <!-- 송금 폼 -->
+    <div id="transfer-form" class="form" style="display:none;">
+        <h3>송금하기</h3>
+        <label for="transfer-id">상대방 ID: </label>
+        <input type="text" id="transfer-id" placeholder="상대방 ID">
+        <label for="transfer-amount">금액: </label>
+        <input type="number" id="transfer-amount" placeholder="송금 금액">
+        <button onclick="transferMoney()">송금</button>
+        <button onclick="closeForm('transfer-form')">닫기</button>
+    </div>
+
+    <!-- 입금 폼 -->
+    <div id="deposit-form" class="form" style="display:none;">
+        <h3>입금하기</h3>
+        <label for="deposit-amount">금액: </label>
+        <input type="number" id="deposit-amount" placeholder="입금 금액">
+        <button onclick="depositMoney()">입금</button>
+        <button onclick="closeForm('deposit-form')">닫기</button>
+    </div>
+
+    <!-- 대출 폼 -->
+    <div id="loan-form" class="form" style="display:none;">
+        <h3>대출받기</h3>
+        <label for="loan-amount">금액: </label>
+        <input type="number" id="loan-amount" placeholder="대출 금액">
+        <button onclick="loanMoney()">대출</button>
+        <button onclick="closeForm('loan-form')">닫기</button>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>

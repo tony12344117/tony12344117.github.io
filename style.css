@@ -1,202 +1,54 @@
-// ====== 데이터와 초기값 ======
-
-// 가짜 사용자 DB (id, password, balance, transactions)
-const MASTER_ID = '정후교';
-const MASTER_PW = '302118';
-
-let users = JSON.parse(localStorage.getItem('users')) || [
-  { id: MASTER_ID, pw: MASTER_PW, balance: 1000, transactions: [] }
-];
-
-let currentUser = null; // 로그인된 사용자 객체
-
-// ====== 로컬 저장 ======
-function saveUsers() {
-  localStorage.setItem('users', JSON.stringify(users));
+/* 스타일.css */
+본문 {
+ 폰트 패밀리: '아리알', 산세리프;
+ background: #f4f4f4;
+ 여백: 0;
+ 패딩: 0;
+ 텍스트 align: 중심;
 }
 
-// ====== 로그인 처리 ======
-function login(id, pw) {
-  const user = users.find(u => u.id === id && u.pw === pw);
-  if(user) {
-    currentUser = user;
-    localStorage.setItem('currentUserId', id);
-    return true;
-  }
-  return false;
+h1, h2 {
+ 마진: 10 px;
 }
 
-function logout() {
-  currentUser = null;
-  localStorage.removeItem('currentUserId');
-  location.reload();
+입력 {
+ 패딩: 8 px;
+ 여백: 5 px;
+ 너비: 200 px;
 }
 
-// 로그인 유지
-function tryAutoLogin() {
-  const savedId = localStorage.getItem('currentUserId');
-  if(savedId) {
-    const user = users.find(u => u.id === savedId);
-    if(user) {
-      currentUser = user;
-      return true;
-    }
-  }
-  return false;
+버튼 {
+ 패딩: 10 px 20 px;
+ 배경: #4CAF50;
+ 색상: 흰색;
+ 경계: 없음;
+ 여백: 5 px;
+ 커서: 포인터;
 }
 
-// ====== UI 관련 ======
-
-const loginScreen = document.getElementById('login-screen');
-const appScreen = document.getElementById('app');
-const loginBtn = document.getElementById('login-btn');
-const loginError = document.getElementById('login-error');
-
-const menuToggle = document.getElementById('menu-toggle');
-const sidebar = document.getElementById('sidebar');
-const mainContent = document.getElementById('main-content');
-const logoutBtn = document.getElementById('logout-btn');
-
-const btnBalance = document.getElementById('btn-balance');
-const btnTransfer = document.getElementById('btn-transfer');
-const btnDeposit = document.getElementById('btn-deposit');
-const btnWithdraw = document.getElementById('btn-withdraw');
-
-function renderWelcome() {
-  mainContent.innerHTML = `
-    <h2>환영합니다! 오이 거래소 입니다.</h2>
-    <p>왼쪽 ☰ 버튼을 눌러 사용 가능한 기능을 선택하세요.</p>
-  `;
+버튼: hover {
+ 배경: #45a049;
 }
 
-function renderBalance() {
-  mainContent.innerHTML = `
-    <h2>현재 잔액</h2>
-    <p>${currentUser.balance} 오이</p>
-  `;
+헤더 {
+ 배경: #4CAF50;
+ 색상: 흰색;
+ 패딩: 10 px;
+ 디스플레이: 플렉스;
+ 정당화 내용: 공간 간;
+ 정렬 items: 중심;
 }
 
-function renderDeposit() {
-  mainContent.innerHTML = `
-    <h2>입금 안내</h2>
-    <p>학교에서 사업시간에 정후교 한테 찾아와서 말하세요.</p>
-  `;
+제쳐두고
+ 배경: #DDD;
+ 패딩: 10 px;
+ 텍스트 align: 왼쪽;
 }
 
-function renderWithdraw() {
-  mainContent.innerHTML = `
-    <h2>출금 안내</h2>
-    <p>학교에 와서 정후교한테 말하세요.</p>
-  `;
+숨겨진 {}
+ 표시: 없음;
 }
 
-function renderTransfer() {
-  // 사용자 리스트 (로그인된 사용자 제외)
-  const others = users.filter(u => u.id !== currentUser.id);
-
-  let userOptions = others.length
-    ? others.map(u => `<option value="${u.id}">${u.id}</option>`).join('')
-    : '<option disabled>가입한 사용자가 없습니다.</option>';
-
-  mainContent.innerHTML = `
-    <h2>송금하기</h2>
-    <div class="form-group">
-      <label for="transfer-recipient">받는 사람:</label>
-      <select id="transfer-recipient">${userOptions}</select>
-    </div>
-    <div class="form-group">
-      <label for="transfer-amount">금액:</label>
-      <input type="number" id="transfer-amount" min="1" />
-    </div>
-    <button class="action-btn" id="transfer-btn">송금</button>
-  `;
-
-  document.getElementById('transfer-btn').addEventListener('click', () => {
-    const recipientId = document.getElementById('transfer-recipient').value;
-    const amount = Number(document.getElementById('transfer-amount').value);
-
-    if(!recipientId) {
-      alert('받는 사람을 선택하세요.');
-      return;
-    }
-    if(isNaN(amount) || amount <= 0) {
-      alert('송금할 금액을 정확히 입력하세요.');
-      return;
-    }
-    if(amount > currentUser.balance) {
-      alert('잔액이 부족합니다.');
-      return;
-    }
-
-    const recipient = users.find(u => u.id === recipientId);
-    if(!recipient) {
-      alert('받는 사람을 찾을 수 없습니다.');
-      return;
-    }
-
-    // 송금 처리
-    currentUser.balance -= amount;
-    recipient.balance += amount;
-
-    const now = new Date().toLocaleString();
-
-    // 거래 기록 남기기
-    currentUser.transactions.push({ type: '송금', amount: -amount, to: recipientId, date: now });
-    recipient.transactions.push({ type: '송금받음', amount: amount, from: currentUser.id, date: now });
-
-    saveUsers();
-
-    alert(`${recipientId}님께 ${amount} 오이를 송금했습니다.`);
-
-    renderBalance();
-  });
+.message {
+ 색상: 빨간색;
 }
-
-// 메뉴 토글
-menuToggle.addEventListener('click', () => {
-  if(sidebar.classList.contains('hidden')) {
-    sidebar.classList.remove('hidden');
-  } else {
-    sidebar.classList.add('hidden');
-  }
-});
-
-logoutBtn.addEventListener('click', () => {
-  if(confirm('로그아웃 하시겠습니까?')) {
-    logout();
-  }
-});
-
-btnBalance.addEventListener('click', renderBalance);
-btnTransfer.addEventListener('click', renderTransfer);
-btnDeposit.addEventListener('click', renderDeposit);
-btnWithdraw.addEventListener('click', renderWithdraw);
-
-loginBtn.addEventListener('click', () => {
-  const id = document.getElementById('login-id').value.trim();
-  const pw = document.getElementById('login-pw').value;
-
-  if(login(id, pw)) {
-    loginError.style.display = 'none';
-    loginScreen.style.display = 'none';
-    appScreen.style.display = 'flex';
-    sidebar.classList.add('hidden');
-    renderWelcome();
-  } else {
-    loginError.style.display = 'block';
-  }
-});
-
-// 페이지 로드 시 로그인 유지 시도
-window.onload = () => {
-  if(tryAutoLogin()) {
-    loginScreen.style.display = 'none';
-    appScreen.style.display = 'flex';
-    sidebar.classList.add('hidden');
-    renderWelcome();
-  } else {
-    loginScreen.style.display = 'block';
-    appScreen.style.display = 'none';
-  }
-};
-

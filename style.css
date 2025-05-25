@@ -1,54 +1,70 @@
-/* 스타일.css */
-본문 {
- 폰트 패밀리: '아리알', 산세리프;
- background: #f4f4f4;
- 여백: 0;
- 패딩: 0;
- 텍스트 align: 중심;
+/* style.css */
+/* --- 공통 --- */
+* { box-sizing: border-box; }
+body {
+  margin: 0; padding: 0;
+  font-family: 'Noto Sans KR', sans-serif;
+  background: #f4f9ff; color: #333;
+  text-align: center;
 }
+.hidden { display: none !important; }
+.message { color: #d9534f; font-weight: 600; min-height: 1.2em; }
+.small { font-size: 0.85em; color: #666; margin-top: 5px; }
 
-h1, h2 {
- 마진: 10 px;
+/* --- 인증 섹션 --- */
+#auth-section {
+  padding: 20px;
 }
+#auth-section h1 { margin-bottom: 15px; color: #0057a0; }
+#register-section {
+  display: inline-block; text-align: left;
+  padding: 20px; background: white;
+  border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+#register-section h2 {
+  margin-top: 0; color: #0057a0;
+  border-bottom: 2px solid #0057a0; padding-bottom: 4px;
+}
+#register-section label {
+  display: block; margin-top: 10px; font-weight: 600;
+}
+#register-section input {
+  width: 100%; padding: 8px; margin-top: 4px;
+  border: 1px solid #ccc; border-radius: 4px;
+}
+#register-section button {
+  width: 100%; margin-top: 15px;
+  padding: 10px; font-size: 1em; color: white;
+  background: #0057a0; border: none;
+  border-radius: 5px; cursor: pointer;
+  transition: background 0.3s;
+}
+#register-section button:hover { background: #004080; }
+.reset-btn { background: #d9534f !important; }
+.reset-btn:hover { background: #c9302c !important; }
 
-입력 {
- 패딩: 8 px;
- 여백: 5 px;
- 너비: 200 px;
+/* --- 메인 섹션 --- */
+header {
+  background: #0057a0; color: white;
+  padding: 10px 20px; display: flex;
+  align-items: center; justify-content: space-between;
 }
-
-버튼 {
- 패딩: 10 px 20 px;
- 배경: #4CAF50;
- 색상: 흰색;
- 경계: 없음;
- 여백: 5 px;
- 커서: 포인터;
+.menu-btn { font-size: 1.5em; background: none; border: none; color: white; cursor: pointer; }
+.container { display: flex; height: calc(100vh - 56px); }
+aside {
+  width: 180px; background: #eef7ff;
+  padding: 10px; box-shadow: 2px 0 6px rgba(0,0,0,0.05);
 }
-
-버튼: hover {
- 배경: #45a049;
+aside button {
+  width: 100%; padding: 10px; margin: 5px 0;
+  font-weight: 600; border: none; background: none;
+  text-align: left; cursor: pointer;
+  transition: background 0.2s;
 }
-
-헤더 {
- 배경: #4CAF50;
- 색상: 흰색;
- 패딩: 10 px;
- 디스플레이: 플렉스;
- 정당화 내용: 공간 간;
- 정렬 items: 중심;
+aside button:hover { background: #d4e8ff; }
+main {
+  flex-grow: 1; padding: 20px; background: white;
+  overflow-y: auto;
 }
-
-제쳐두고
- 배경: #DDD;
- 패딩: 10 px;
- 텍스트 align: 왼쪽;
-}
-
-숨겨진 {}
- 표시: 없음;
-}
-
-.message {
- 색상: 빨간색;
-}
+main h2 { margin-top: 0; color: #0057a0; }
+main p { line-height: 1.6; }

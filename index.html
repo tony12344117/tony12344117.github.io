@@ -1,55 +1,40 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>토스 웹 앱</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>오이 거래소</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div id="login-screen">
+    <h2>로그인</h2>
+    <input type="text" id="login-id" placeholder="아이디 입력" />
+    <input type="password" id="login-pw" placeholder="비밀번호 입력" />
+    <button id="login-btn">로그인</button>
+    <p id="login-error" style="color:red; display:none;">아이디 또는 비밀번호가 틀렸습니다.</p>
+  </div>
+
+  <div id="app" style="display:none;">
     <header>
-        <h1>내 토스 대시보드</h1>
+      <button id="menu-toggle">☰</button>
+      <h1>오이 거래소</h1>
+      <button id="logout-btn">로그아웃</button>
     </header>
 
-    <section id="balance">
-        <h2>내 잔액: <span id="balance-amount">0 오이</span></h2>
-    </section>
+    <aside id="sidebar" class="hidden">
+      <button id="btn-balance">현재 잔액</button>
+      <button id="btn-transfer">송금</button>
+      <button id="btn-deposit">입금</button>
+      <button id="btn-withdraw">출금</button>
+    </aside>
 
-    <section id="transactions">
-        <button onclick="showTransferForm()">송금</button>
-        <button onclick="showDepositForm()">입금</button>
-        <button onclick="showLoanForm()">대출</button>
-    </section>
+    <main id="main-content">
+      <h2>환영합니다! 오이 거래소 입니다.</h2>
+      <p>왼쪽 ☰ 버튼을 눌러 사용 가능한 기능을 선택하세요.</p>
+    </main>
+  </div>
 
-    <!-- 송금 폼 -->
-    <div id="transfer-form" class="form" style="display:none;">
-        <h3>송금하기</h3>
-        <label for="transfer-id">상대방 ID: </label>
-        <input type="text" id="transfer-id" placeholder="상대방 ID">
-        <label for="transfer-amount">금액: </label>
-        <input type="number" id="transfer-amount" placeholder="송금 금액">
-        <button onclick="transferMoney()">송금</button>
-        <button onclick="closeForm('transfer-form')">닫기</button>
-    </div>
-
-    <!-- 입금 폼 -->
-    <div id="deposit-form" class="form" style="display:none;">
-        <h3>입금하기</h3>
-        <label for="deposit-amount">금액: </label>
-        <input type="number" id="deposit-amount" placeholder="입금 금액">
-        <button onclick="depositMoney()">입금</button>
-        <button onclick="closeForm('deposit-form')">닫기</button>
-    </div>
-
-    <!-- 대출 폼 -->
-    <div id="loan-form" class="form" style="display:none;">
-        <h3>대출받기</h3>
-        <label for="loan-amount">금액: </label>
-        <input type="number" id="loan-amount" placeholder="대출 금액">
-        <button onclick="loanMoney()">대출</button>
-        <button onclick="closeForm('loan-form')">닫기</button>
-    </div>
-
-    <script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>

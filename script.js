@@ -1,4 +1,3 @@
-// script.js
 // ====== 키 & 상수 ======
 const STORAGE_KEY = 'users';
 const CURRENT_KEY = 'currentUser';
@@ -10,6 +9,7 @@ const MASTER_START_BALANCE = 1000;
 let users = JSON.parse(localStorage.getItem(STORAGE_KEY));
 if (!users || typeof users !== 'object') {
   users = {};
+  // 마스터는 처음에 1000오이, 신규 계정은 0오이
   users[MASTER_ID] = { password: MASTER_PW, balance: MASTER_START_BALANCE };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
 }
@@ -28,7 +28,7 @@ window.onload = () => {
   if (currentUser && users[currentUser]) showHome();
 };
 
-// ====== 인증 섹션 핸들러 ======
+// ====== 인증 핸들러 ======
 document.getElementById('btn-register').onclick = () => {
   const id = document.getElementById('reg-id').value.trim();
   const pw = document.getElementById('reg-pw').value;
@@ -40,6 +40,7 @@ document.getElementById('btn-register').onclick = () => {
   if (users[id]) {
     msg.innerText = '이미 존재하는 아이디입니다.'; return;
   }
+  // 신규 계정은 무조건 0 오이
   users[id] = { password: pw, balance: 0 };
   saveUsers();
   msg.innerText = '계정이 생성되었습니다. 아래에서 로그인하세요.';
@@ -98,9 +99,10 @@ function renderSidebar() {
     sb.appendChild(btn);
   }
 
-  // 관리자 전용: 잔액 조정, 잔액 조회
+  // 관리자 전용: 오이 조정 + 유저 잔액 보기
   if (currentUser === MASTER_ID) {
     sb.appendChild(document.createElement('hr'));
+
     const adjBtn = document.createElement('button');
     adjBtn.innerText = '관리자: 오이 조정';
     adjBtn.onclick = showAdminAdjust;
@@ -162,8 +164,8 @@ function showWithdraw() {
 
 // ====== 관리자: 오이 조정 ======
 function showAdminAdjust() {
+  // *내 계정도 포함* → filter 제거
   const opts = Object.keys(users)
-    .filter(u => u !== MASTER_ID)
     .map(u => `<option value="${u}">${u}</option>`).join('') ||
     `<option disabled>가입된 사용자가 없습니다.</option>`;
   updateContent(`
@@ -190,7 +192,6 @@ function adminAdjust(isAdd) {
 // ====== 관리자: 유저 잔액 조회 ======
 function showAdminView() {
   const opts = Object.keys(users)
-    .filter(u => u !== MASTER_ID)
     .map(u => `<option value="${u}">${u}</option>`).join('') ||
     `<option disabled>가입된 사용자가 없습니다.</option>`;
   updateContent(`
@@ -203,9 +204,7 @@ function showAdminView() {
 
 function adminViewBalance() {
   const userId = document.getElementById('view-user').value;
-  if (!userId) {
-    alert('사용자를 선택하세요.'); return;
-  }
+  if (!userId) { alert('사용자를 선택하세요.'); return; }
   const bal = users[userId].balance;
   document.getElementById('view-result').innerHTML =
     `<p>${userId}님의 현재 잔액: ${bal} 오이</p>`;

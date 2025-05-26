@@ -1,43 +1,57 @@
-* { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  font-family: 'Noto Sans KR', sans-serif;
-  background: #f0fff4; color: #333; text-align: center; padding: 20px;
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  background: #f4fff2;
+  color: #333;
 }
-.hidden { display: none !important; }
-.highlight { color: #2e8b57; }
 .card {
-  background: #fff; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  padding: 20px; margin: 15px auto; max-width: 360px;
+  max-width: 400px;
+  margin: 60px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
-input, select, textarea {
-  width: 100%; padding: 8px; margin: 8px 0;
-  border: 1px solid #ccc; border-radius: 6px; font-size: 1em;
+input {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
 }
 button {
-  padding: 10px 20px; margin-top: 10px;
-  background: #2e8b57; color: #fff; border: none; border-radius: 6px;
-  cursor: pointer; font-size: 1em; transition: background 0.3s;
+  padding: 10px 20px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #90ee90;
+  cursor: pointer;
 }
-button:hover { background: #276c48; }
+button:hover {
+  background: #7edb7e;
+}
+.warning {
+  color: red;
+  font-size: 0.9em;
+}
 header {
-  display: flex; align-items: center; justify-content: space-between;
-  background: #2e8b57; color: #fff; padding: 10px 20px;
+  background: #c3ffc3;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
-header h1 { font-size: 1.2em; flex-grow: 1; margin: 0 10px; }
-.container {
-  display: flex; height: calc(100vh - 120px);
+#sidebar {
+  background: #e6ffe6;
+  width: 200px;
+  padding: 10px;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  overflow-y: auto;
 }
-aside#sidebar {
-  width: 180px; flex-shrink: 0; text-align: left;
+.hidden {
+  display: none;
 }
-aside button {
-  width: 100%; text-align: left; margin: 5px 0;
-  background: #eafaf1; color: #2e8b57; padding-left: 12px;
+main {
+  margin-left: 220px;
+  padding: 20px;
 }
-aside button:hover { background: #d4f3e0; }
-main#content {
-  flex-grow: 1; padding: 20px; background: #fff; overflow-y: auto;
-  text-align: left;
-}
-main#content h2, main#content h3 { color: #2e8b57; margin-top: 0; }
-main#content p { line-height: 1.6; }

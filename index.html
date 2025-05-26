@@ -3,87 +3,60 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🥒 오이 토스트 거래소</title>
+  <title>오이 거래소</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>🥒 오이 토스트 거래소</header>
-  <div id="container">
-    <nav id="sidebar">
-      <button onclick="showSection('balance')">💰 잔액</button>
-      <button onclick="showSection('send')">💸 송금</button>
-      <button onclick="showSection('deposit')">🏫 입금 안내</button>
-      <button onclick="showSection('withdraw')">🏦 출금 안내</button>
-      <button onclick="showSection('ranking')">🏆 순위표</button>
-      <button onclick="logout()">🚪 로그아웃</button>
-      <div id="adminControls" class="hidden">
-        <hr>
-        <h3>👑 관리자</h3>
-        <button onclick="showSection('adjust')">잔액 조정</button>
-        <button onclick="showSection('history')">거래내역</button>
-        <button onclick="showSection('ban')">계정 정지/해제</button>
-      </div>
-    </nav>
+  <div id="login-section">
+    <h2>오이 거래소 로그인</h2>
+    <input type="text" id="login-username" placeholder="아이디" />
+    <input type="password" id="login-password" placeholder="비밀번호" />
+    <button onclick="login()">로그인</button>
+    <button onclick="showRegister()">회원가입</button>
+  </div>
 
-    <main id="main">
-      <!-- 인증 화면 -->
-      <section id="auth">
-        <h2>🥒 오이 토스트에 오신 걸 환영합니다!</h2>
-        <p class="warn">⚠️ 아이디는 실명으로 입력하세요.</p>
-        <input id="authName" placeholder="이름 (실명)" />
-        <input id="authPass" type="password" placeholder="비밀번호" />
-        <button onclick="register()">계정 만들기</button>
-        <button onclick="login()">로그인</button>
-      </section>
+  <div id="register-section" style="display:none;">
+    <h2>회원가입</h2>
+    <input type="text" id="register-username" placeholder="아이디" />
+    <input type="password" id="register-password" placeholder="비밀번호" />
+    <button onclick="register()">회원가입 완료</button>
+    <button onclick="showLogin()">돌아가기</button>
+  </div>
 
-      <!-- 앱 화면 -->
-      <section id="app" class="hidden">
-        <h2>환영합니다, <span id="currentUser"></span>님!</h2>
-        <div id="balance" class="hidden"></div>
+  <div id="home-section" style="display:none;">
+    <h2 id="welcome-text"></h2>
+    <button onclick="showBalance()">현재 잔액</button>
+    <button onclick="showSend()">송금</button>
+    <button onclick="showDeposit()">입금 안내</button>
+    <button onclick="showWithdraw()">출금 안내</button>
+    <button onclick="logout()">로그아웃</button>
+    <button onclick="showAdjust()" id="admin-btn" style="display:none;">잔액 조정</button>
+    <button onclick="showDeleteAccount()">계정 삭제</button>
+  </div>
 
-        <div id="send" class="hidden">
-          <h3>💸 송금</h3>
-          <select id="recipient"></select>
-          <input id="sendAmt" type="number" placeholder="금액" />
-          <textarea id="sendMsg" maxlength="80" placeholder="메시지 (최대 80자)"></textarea>
-          <button onclick="sendMoney()">송금하기</button>
-        </div>
+  <div id="send-section" style="display:none;">
+    <h2>송금</h2>
+    <input type="text" id="send-to" placeholder="받는 사람 아이디" />
+    <input type="number" id="send-amount" placeholder="금액" />
+    <input type="text" id="send-message" placeholder="메시지 (선택)" />
+    <button onclick="sendMoney()">송금하기</button>
+    <button onclick="goHome()">뒤로</button>
+  </div>
 
-        <div id="deposit" class="hidden">
-          <h3>🏫 입금 안내</h3>
-          <p>학교 사업시간에 정후교에게 문의하세요.</p>
-        </div>
+  <div id="adjust-section" style="display:none;">
+    <h2>잔액 조정</h2>
+    <input type="text" id="adjust-user" placeholder="아이디" />
+    <input type="number" id="adjust-amount" placeholder="금액 (+/-가능)" />
+    <button onclick="adjustBalance()">조정하기</button>
+    <button onclick="goHome()">뒤로</button>
+  </div>
 
-        <div id="withdraw" class="hidden">
-          <h3>🏦 출금 안내</h3>
-          <p>학교에 와서 정후교에게 문의하세요.</p>
-        </div>
-
-        <div id="ranking" class="hidden">
-          <h3>🏆 유저 순위표</h3>
-          <ul id="rankList"></ul>
-        </div>
-
-        <div id="adjust" class="hidden">
-          <h3>👑 잔액 조정</h3>
-          <select id="adminUser"></select>
-          <input id="adjustAmt" type="number" placeholder="+ 금액 또는 - 금액" />
-          <button onclick="adjustBalance(true)">+ 추가</button>
-          <button onclick="adjustBalance(false)">- 차감</button>
-        </div>
-
-        <div id="history" class="hidden">
-          <h3>📜 거래내역</h3>
-          <pre id="logOutput"></pre>
-        </div>
-
-        <div id="ban" class="hidden">
-          <h3>⛔ 계정 정지/해제</h3>
-          <select id="banUser"></select>
-          <button onclick="toggleBan()">변경</button>
-        </div>
-      </section>
-    </main>
+  <div id="delete-section" style="display:none;">
+    <h2>계정 삭제</h2>
+    <p>계정을 삭제하시겠습니까?</p>
+    <button onclick="confirmDeleteStep1()">예</button>
+    <button onclick="goHome()">아니오</button>
+    <p id="delete-confirm-message"></p>
   </div>
 
   <script src="script.js"></script>

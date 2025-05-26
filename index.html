@@ -3,25 +3,26 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>오이 토스트</title>
+  <title>🥒🍞 오이 토스트 거래소</title>
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
   <!-- 인증 영역 -->
   <div id="auth-container">
-    <h1>오이 토스트</h1>
+    <h1>🥒🍞 <span class="highlight">오이 토스트</span> 거래소</h1>
     <p><strong>실명 무조건 사용하세요.</strong></p>
-    <section id="register-section">
-      <h2>계정 만들기</h2>
-      <input id="reg-username" placeholder="이름 (실명)" autocomplete="off"/><br/>
-      <input id="reg-password" type="password" placeholder="비밀번호"/><br/>
+
+    <section id="register-section" class="card">
+      <h2>🆕 계정 만들기</h2>
+      <input id="reg-username" placeholder="👤 이름 (실명)" autocomplete="off"/><br/>
+      <input id="reg-password" type="password" placeholder="🔒 비밀번호"/><br/>
       <button id="btn-register">계정 만들기</button>
     </section>
-    <hr/>
-    <section id="login-section">
-      <h2>로그인</h2>
-      <input id="login-username" placeholder="이름" autocomplete="off"/><br/>
-      <input id="login-password" type="password" placeholder="비밀번호"/><br/>
+
+    <section id="login-section" class="card">
+      <h2>🔑 로그인</h2>
+      <input id="login-username" placeholder="👤 이름" autocomplete="off"/><br/>
+      <input id="login-password" type="password" placeholder="🔒 비밀번호"/><br/>
       <button id="btn-login">로그인</button>
     </section>
   </div>
@@ -30,12 +31,12 @@
   <div id="app" class="hidden">
     <header>
       <button id="menu-toggle">☰</button>
-      <h1>환영합니다! 여기는 오이 토스트 입니다</h1>
-      <button id="btn-logout">로그아웃</button>
+      <h1>🎉 환영합니다! <span class="highlight">오이 토스트</span> 거래소</h1>
+      <button id="btn-logout">🚪 로그아웃</button>
     </header>
     <div class="container">
-      <aside id="sidebar" class="hidden"></aside>
-      <main id="content"></main>
+      <aside id="sidebar" class="hidden card"></aside>
+      <main id="content" class="card"></main>
     </div>
   </div>
 

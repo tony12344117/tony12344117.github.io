@@ -7,56 +7,81 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="login-section">
-    <h2>오이 거래소 로그인</h2>
-    <input type="text" id="login-username" placeholder="아이디" />
-    <input type="password" id="login-password" placeholder="비밀번호" />
+  <div id="login-screen">
+    <h1>오이 거래소</h1>
+    <input type="text" id="login-id" placeholder="아이디 입력" />
+    <input type="password" id="login-password" placeholder="비밀번호 입력" />
     <button onclick="login()">로그인</button>
-    <button onclick="showRegister()">회원가입</button>
+    <button onclick="showSignup()">회원가입</button>
   </div>
 
-  <div id="register-section" style="display:none;">
-    <h2>회원가입</h2>
-    <input type="text" id="register-username" placeholder="아이디" />
-    <input type="password" id="register-password" placeholder="비밀번호" />
-    <button onclick="register()">회원가입 완료</button>
-    <button onclick="showLogin()">돌아가기</button>
+  <div id="signup-screen" class="hidden">
+    <h1>회원가입</h1>
+    <input type="text" id="signup-id" placeholder="아이디 입력" />
+    <input type="password" id="signup-password" placeholder="비밀번호 입력" />
+    <button onclick="signup()">가입하기</button>
+    <button onclick="showLogin()">뒤로가기</button>
   </div>
 
-  <div id="home-section" style="display:none;">
-    <h2 id="welcome-text"></h2>
-    <button onclick="showBalance()">현재 잔액</button>
-    <button onclick="showSend()">송금</button>
-    <button onclick="showDeposit()">입금 안내</button>
-    <button onclick="showWithdraw()">출금 안내</button>
-    <button onclick="logout()">로그아웃</button>
-    <button onclick="showAdjust()" id="admin-btn" style="display:none;">잔액 조정</button>
-    <button onclick="showDeleteAccount()">계정 삭제</button>
-  </div>
+  <div id="main-screen" class="hidden">
+    <div id="sidebar">
+      <button onclick="toggleSidebar()">☰</button>
+      <div id="menu">
+        <p onclick="showTab('home')">홈</p>
+        <p onclick="showTab('balance')">현재잔액</p>
+        <p onclick="showTab('transfer')">송금</p>
+        <p onclick="showTab('deposit')">입금</p>
+        <p onclick="showTab('withdraw')">출금</p>
+        <p onclick="showTab('ranking')">보유 순위</p>
+        <p onclick="showTab('members')">회원 목록</p>
+        <p onclick="logout()">로그아웃</p>
+      </div>
+    </div>
 
-  <div id="send-section" style="display:none;">
-    <h2>송금</h2>
-    <input type="text" id="send-to" placeholder="받는 사람 아이디" />
-    <input type="number" id="send-amount" placeholder="금액" />
-    <input type="text" id="send-message" placeholder="메시지 (선택)" />
-    <button onclick="sendMoney()">송금하기</button>
-    <button onclick="goHome()">뒤로</button>
-  </div>
+    <div id="content">
+      <div id="home-tab" class="tab">
+        <h2>환영합니다 오이 거래소 입니다!</h2>
+        <p>좌측 메뉴에서 기능을 선택해주세요</p>
+      </div>
 
-  <div id="adjust-section" style="display:none;">
-    <h2>잔액 조정</h2>
-    <input type="text" id="adjust-user" placeholder="아이디" />
-    <input type="number" id="adjust-amount" placeholder="금액 (+/-가능)" />
-    <button onclick="adjustBalance()">조정하기</button>
-    <button onclick="goHome()">뒤로</button>
-  </div>
+      <div id="balance-tab" class="tab hidden">
+        <h2>현재 잔액</h2>
+        <p id="balance"></p>
+      </div>
 
-  <div id="delete-section" style="display:none;">
-    <h2>계정 삭제</h2>
-    <p>계정을 삭제하시겠습니까?</p>
-    <button onclick="confirmDeleteStep1()">예</button>
-    <button onclick="goHome()">아니오</button>
-    <p id="delete-confirm-message"></p>
+      <div id="transfer-tab" class="tab hidden">
+        <h2>송금</h2>
+        <select id="transfer-to"></select>
+        <input type="number" id="transfer-amount" placeholder="보낼 오이 수" />
+        <button onclick="transfer()">보내기</button>
+        <p id="transfer-result"></p>
+      </div>
+
+      <div id="deposit-tab" class="tab hidden">
+        <h2>입금 방법</h2>
+        <p>학교에서 사업시간에 <strong>정후교</strong>한테 찾아와서 말하세요</p>
+      </div>
+
+      <div id="withdraw-tab" class="tab hidden">
+        <h2>출금 방법</h2>
+        <p>학교에 와서 <strong>정후교</strong>한테 말하세요</p>
+      </div>
+
+      <div id="ranking-tab" class="tab hidden">
+        <h2>오이 보유 순위</h2>
+        <ol id="ranking-list"></ol>
+      </div>
+
+      <div id="members-tab" class="tab hidden">
+        <h2>가입한 회원</h2>
+        <ul id="member-list"></ul>
+        <div id="master-controls" class="hidden">
+          <h3>계정 삭제</h3>
+          <select id="delete-user"></select>
+          <button onclick="deleteUser()">삭제</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script src="script.js"></script>

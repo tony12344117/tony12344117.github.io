@@ -1,57 +1,72 @@
 body {
   font-family: 'Arial', sans-serif;
   margin: 0;
-  background: #f4fff2;
+  padding: 0;
+  background-color: #f4fff0;
   color: #333;
 }
-.card {
-  max-width: 400px;
-  margin: 60px auto;
-  padding: 20px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+
+#auth-container {
+  text-align: center;
+  margin-top: 50px;
 }
+
+h1 {
+  font-size: 2em;
+}
+
 input {
   display: block;
-  width: 100%;
-  margin: 10px 0;
+  margin: 10px auto;
   padding: 10px;
+  font-size: 1em;
 }
+
 button {
   padding: 10px 20px;
-  margin-top: 10px;
+  margin: 5px;
+  font-size: 1em;
+  background-color: #96e072;
   border: none;
   border-radius: 8px;
-  background: #90ee90;
   cursor: pointer;
+  transition: background-color 0.2s;
 }
+
 button:hover {
-  background: #7edb7e;
+  background-color: #74c55b;
 }
-.warning {
+
+.warn {
   color: red;
-  font-size: 0.9em;
+  font-weight: bold;
 }
-header {
-  background: #c3ffc3;
-  padding: 15px;
+
+#app-container {
   display: flex;
-  align-items: center;
-  gap: 10px;
 }
+
 #sidebar {
-  background: #e6ffe6;
   width: 200px;
+  background-color: #d7f8c4;
   padding: 10px;
-  position: fixed;
-  top: 0; left: 0; bottom: 0;
-  overflow-y: auto;
+  min-height: 100vh;
 }
-.hidden {
-  display: none;
+
+#sidebar button {
+  width: 100%;
+  margin-bottom: 10px;
 }
-main {
-  margin-left: 220px;
+
+#main {
+  flex-grow: 1;
   padding: 20px;
+}
+
+#content {
+  margin-top: 20px;
+  padding: 15px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #ccc;
 }

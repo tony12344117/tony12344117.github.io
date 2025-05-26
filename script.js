@@ -30,7 +30,7 @@ function signup() {
     return;
   }
 
-  users[id] = { pw, balance: 100 };  // 초기 보유 100 오이
+  users[id] = { pw, balance: 100 }; // 초기 오이
   saveUsers(users);
   alert("가입 성공! 초기 100오이 지급!");
   showLogin();
@@ -72,7 +72,7 @@ function showTab(tab) {
 
   if (tab === "transfer") {
     html = `<h2>💸 송금</h2>
-            <select id="recipient">` +
+      <select id="recipient">` +
       Object.keys(users).filter(u => u !== currentUser).map(u => `<option value="${u}">${u}</option>`).join("") +
       `</select>
       <input type="number" id="amount" placeholder="금액" />
@@ -82,13 +82,24 @@ function showTab(tab) {
   if (tab === "members") {
     html = `<h2>👥 가입자 목록</h2><ul>`;
     for (let id in users) {
-      html += `<li>${id}</li>`;
+      html += `<li>${id}`;
+      if (currentUser === masterId) {
+        html += ` - ${users[id].balance} 오이`;
+      }
+      html += `</li>`;
     }
     html += `</ul>`;
+
     if (currentUser === masterId) {
-      html += `<h3>❌ 계정 삭제</h3>
-               <input placeholder="삭제할 아이디" id="del-id" />
-               <button onclick="deleteUser()">삭제</button>`;
+      html += `
+        <h3>💼 오이 조작</h3>
+        <input id="edit-id" placeholder="대상 아이디" />
+        <input id="edit-amount" placeholder="변경할 금액(+, - 가능)" />
+        <button onclick="editBalance()">수정</button>
+        <h3>❌ 계정 삭제</h3>
+        <input id="del-id" placeholder="삭제할 아이디" />
+        <button onclick="deleteUser()">삭제</button>
+      `;
     }
   }
 
@@ -102,23 +113,6 @@ function showTab(tab) {
   }
 
   document.getElementById("tab-content").innerHTML = html;
-}
-
-function deleteUser() {
-  const id = document.getElementById("del-id").value;
-  const users = getUsers();
-  if (id === masterId) {
-    alert("마스터 계정은 삭제할 수 없습니다.");
-    return;
-  }
-  if (users[id]) {
-    delete users[id];
-    saveUsers(users);
-    alert(`${id} 계정을 삭제했습니다.`);
-    showTab("members");
-  } else {
-    alert("존재하지 않는 아이디입니다.");
-  }
 }
 
 function sendMoney() {
@@ -139,6 +133,48 @@ function sendMoney() {
   users[currentUser].balance -= amount;
   users[to].balance += amount;
   saveUsers(users);
-  alert(`${to}님에게 ${amount}오이를 보냈습니다.`);
+  alert(`${to}님에게 ${amount} 오이를 보냈습니다.`);
   showTab("balance");
+}
+
+function deleteUser() {
+  const id = document.getElementById("del-id").value;
+  const users = getUsers();
+
+  if (id === masterId) {
+    alert("마스터 계정은 삭제할 수 없습니다.");
+    return;
+  }
+
+  if (users[id]) {
+    delete users[id];
+    saveUsers(users);
+    alert(`${id} 계정을 삭제했습니다.`);
+    showTab("members");
+  } else {
+    alert("존재하지 않는 아이디입니다.");
+  }
+}
+
+function editBalance() {
+  const id = document.getElementById("edit-id").value;
+  const change = parseInt(document.getElementById("edit-amount").value);
+  const users = getUsers();
+
+  if (!users[id]) {
+    alert("존재하지 않는 아이디입니다.");
+    return;
+  }
+
+  if (isNaN(change)) {
+    alert("숫자를 입력해주세요.");
+    return;
+  }
+
+  users[id].balance += change;
+  if (users[id].balance < 0) users[id].balance = 0;
+
+  saveUsers(users);
+  alert(`${id}님의 오이를 ${change >= 0 ? "추가" : "차감"}했습니다.`);
+  showTab("members");
 }

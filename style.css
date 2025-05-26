@@ -1,105 +1,58 @@
 body {
+  font-family: 'Arial', sans-serif;
+  background: #f0f2f5;
   margin: 0;
   padding: 0;
-  background: linear-gradient(to right, #a8e063, #56ab2f);
-  font-family: 'Segoe UI', sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
+  text-align: center;
 }
 
-#app {
-  width: 100%;
-  max-width: 400px;
-  padding: 20px;
+.page {
+  margin-top: 40px;
 }
 
-.card {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-  padding: 24px;
-  box-sizing: border-box;
-  animation: fadeIn 0.3s ease;
-}
-
-input, button, select {
-  width: 100%;
-  padding: 12px;
-  margin: 8px 0;
-  font-size: 16px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
+input {
+  margin: 8px;
+  padding: 8px;
+  width: 200px;
 }
 
 button {
-  background-color: #6ab04c;
-  color: white;
-  border: none;
-  font-weight: bold;
+  padding: 8px 16px;
+  margin: 6px;
   cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-button:hover {
-  background-color: #4CAF50;
 }
 
 .hidden {
   display: none;
 }
 
-a {
-  color: #4CAF50;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.top-bar {
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  background: #fff;
-  border-radius: 10px 10px 0 0;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-.top-bar button {
-  width: 40px;
-  height: 40px;
-  margin-right: 10px;
-  background: #4CAF50;
-  color: white;
-  font-size: 20px;
-  border-radius: 50%;
-}
-
-#welcome-text {
-  font-weight: bold;
-  font-size: 18px;
-}
-
 .sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  background: #333;
+  height: 100vh;
+  width: 160px;
   display: flex;
   flex-direction: column;
-  background: #f0fff0;
-  margin-top: 10px;
-  padding: 10px;
-  border-radius: 8px;
+  align-items: center;
+  padding-top: 20px;
 }
 
 .sidebar button {
-  margin-bottom: 10px;
+  width: 130px;
+  margin-bottom: 12px;
+  background-color: #444;
+  color: white;
+  border: none;
 }
 
-ul, ol {
-  padding-left: 20px;
-  margin-top: 10px;
+.content {
+  margin-left: 180px;
+  padding: 20px;
+  text-align: left;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+.section {
+  margin-top: 20px;
 }

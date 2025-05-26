@@ -1,154 +1,123 @@
-// — 마스터 정보
-const masterId   = "정후교";
-const masterPw   = "302118";
-let currentUser  = null;
-let isMaster     = false;
+// ==== 상수 & 초기화 ====
+const master = { id: '정후교', pass: '302118' };
+let users   = JSON.parse(localStorage.getItem('users') || '{}');
+let logs    = JSON.parse(localStorage.getItem('logs')  || '[]');
+let current = null;
 
-// — LocalStorage 유틸
-function getUsers() {
-  return JSON.parse(localStorage.getItem("users") || "{}");
-}
-function saveUsers(u) {
-  localStorage.setItem("users", JSON.stringify(u));
+function saveAll() {
+  localStorage.setItem('users', JSON.stringify(users));
+  localStorage.setItem('logs', JSON.stringify(logs));
 }
 
-// — 화면 전환
-function showSignup(){
-  qs("#login-screen").classList.add("hidden");
-  qs("#signup-screen").classList.remove("hidden");
-}
-function showLogin(){
-  qs("#signup-screen").classList.add("hidden");
-  qs("#login-screen").classList.remove("hidden");
-}
-function toggleSidebar(){
-  qs("#menu").classList.toggle("hidden");
+// ==== 인증 ====
+function register() {
+  const name = authName.value.trim();
+  const pw   = authPass.value;
+  if (!name || !pw) return alert('이름과 비밀번호를 입력하세요.');
+  if (users[name]) return alert('이미 존재하는 계정입니다.');
+  users[name] = { pass: pw, balance: 0, banned: false };
+  saveAll();
+  alert('가입이 완료되었습니다.');
 }
 
-// — 회원가입 (초기 0 오이)
-function signup(){
-  const id = qs("#signup-id").value.trim();
-  const pw = qs("#signup-pw").value;
-  let users = getUsers();
-  if(!id||!pw) return alert("아이디와 비밀번호 입력!");
-  if(users[id]||id===masterId) return alert("이미 존재하는 아이디!");
-  users[id] = { pw, balance:0 };
-  saveUsers(users);
-  alert("🎉 가입 성공! 초기 오이 0 입니다.");
-  showLogin();
+function login() {
+  const name = authName.value.trim();
+  const pw   = authPass.value;
+  if (!(users[name] || name === master.id))           return alert('계정이 없습니다.');
+  if (name !== master.id && users[name].pass !== pw)  return alert('비밀번호가 틀렸습니다.');
+  if (users[name]?.banned)                            return alert('정지된 계정입니다.');
+  current = name;
+  auth.classList.add('hidden');
+  app.classList.remove('hidden');
+  currentUser.innerText = name;
+  if (name === master.id) adminControls.classList.remove('hidden');
+  populateLists();
+  showSection('balance');
+  updateRanking();
+  updateLogs();
 }
 
-// — 로그인
-function login(){
-  const id = qs("#login-id").value.trim();
-  const pw = qs("#login-pw").value;
-  const users = getUsers();
-  if(id===masterId&&pw===masterPw){
-    isMaster=true; currentUser=id;
-  } else if(users[id]&&users[id].pw===pw){
-    isMaster=false; currentUser=id;
-  } else {
-    return alert("❌ 로그인 실패");
+function logout() {
+  current = null;
+  app.classList.add('hidden');
+  auth.classList.remove('hidden');
+}
+
+// ==== 화면 전환 ====
+function showSection(id) {
+  ['balance','send','deposit','withdraw','ranking','adjust','history','ban']
+    .forEach(sec => document.getElementById(sec).classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+  if (id === 'balance') {
+    balance.innerText = `🥒 잔액: ${users[current]?.balance || 0} 오이`;
   }
-  qs("#login-screen, #signup-screen").forEach(el=>el.classList.add("hidden"));
-  qs("#home-screen").classList.remove("hidden");
-  qs("#welcome-text").innerText=`🥳 ${currentUser}님 환영합니다!`;
-  showTab("balance");
 }
 
-// — 로그아웃
-function logout(){
-  currentUser=null; isMaster=false;
-  location.reload();
+// ==== 목록 채우기 ====
+function populateLists() {
+  recipient.innerHTML = '';
+  adminUser.innerHTML = '';
+  banUser.innerHTML   = '';
+  Object.keys(users).forEach(u => {
+    if (u !== current) recipient.innerHTML  += `<option>${u}</option>`;
+    adminUser.innerHTML += `<option>${u}</option>`;
+    if (u !== master.id) banUser.innerHTML += `<option>${u}</option>`;
+  });
 }
 
-// — 탭 전환 & 렌더
-function showTab(tab){
-  const users = getUsers();
-  let html="";
-  if(tab==="balance"){
-    html=`<h2>💰 내 잔액</h2><p>${users[currentUser]?.balance||0} 오이</p>`;
-  }
-  if(tab==="transfer"){
-    html=`<h2>💸 송금</h2>
-      <select id="recipient">${
-        Object.keys(users).filter(u=>u!==currentUser)
-          .map(u=>`<option value="${u}">${u}</option>`).join("")
-      }</select>
-      <input type="number" id="amount" placeholder="금액" />
-      <button class="btn" onclick="sendMoney()">▶️ 보내기</button>`;
-  }
-  if(tab==="members"){
-    html=`<h2>👥 회원 목록</h2><ul>${
-      Object.entries(users).map(([u,d])=>
-        `<li>${u}${isMaster?` - ${d.balance} 오이`:``}</li>`
-      ).join("")
-    }</ul>`;
-    if(isMaster){
-      html+=`
-        <h3>🔧 잔액 조작</h3>
-        <input id="edit-id" placeholder="대상 아이디" />
-        <input id="edit-amount" type="number" placeholder="+/- 오이" />
-        <button class="btn" onclick="editBalance()">수정</button>
-        <h3>❌ 계정 삭제</h3>
-        <input id="del-id" placeholder="삭제할 아이디" />
-        <button class="btn logout" onclick="deleteUser()">삭제</button>`;
-    }
-  }
-  if(tab==="ranking"){
-    const ranked = Object.entries(users).sort((a,b)=>b[1].balance-a[1].balance);
-    html=`<h2>🏆 순위</h2><ol>${
-      ranked.map(([u,d])=>`<li>${u} - ${d.balance} 오이</li>`).join("")
-    }</ol>`;
-  }
-  qs("#tab-content").innerHTML=html;
+// ==== 송금 ====
+function sendMoney() {
+  const to     = recipient.value;
+  const amt    = parseInt(sendAmt.value, 10);
+  const msg    = sendMsg.value.trim();
+  if (!amt || amt <= 0)                return alert('올바른 금액을 입력하세요.');
+  if (!msg || msg.length > 80)         return alert('메시지는 1~80자 사이여야 합니다.');
+  if (users[current].balance < amt)    return alert('잔액이 부족합니다.');
+  users[current].balance -= amt;
+  users[to].balance         += amt;
+  logs.push(`${current}→${to}:${amt}🥒 msg:${msg}`);
+  saveAll();
+  alert('송금이 완료되었습니다.');
+  showSection('balance');
+  updateRanking();
+  updateLogs();
 }
 
-// — 송금
-function sendMoney(){
-  const to = qs("#recipient").value;
-  const amt = parseInt(qs("#amount").value,10);
-  const users = getUsers();
-  if(!users[to]||!amt||amt<=0) return alert("❗️ 유효하지 않은 입력");
-  if(users[currentUser].balance<amt) return alert("잔액 부족");
-  users[currentUser].balance-=amt;
-  users[to].balance+=amt;
-  saveUsers(users);
-  alert(`✅ ${to}님께 ${amt} 오이 송금 완료`);
-  showTab("balance");
+// ==== 관리자 기능 ====
+function adjustBalance(isAdd) {
+  const u   = adminUser.value;
+  const amt = parseInt(adjustAmt.value, 10);
+  if (!u)             return alert('사용자를 선택하세요.');
+  if (!amt || amt===0) return alert('금액을 입력하세요.');
+  users[u].balance += isAdd ? amt : -amt;
+  logs.push(`🛠 마스터 ${isAdd? '추가':'차감'} ${u}: ${isAdd?'+':''}${amt}🥒`);
+  saveAll();
+  alert('잔액 조정이 완료되었습니다.');
+  updateRanking();
 }
 
-// — 계정 삭제
-function deleteUser(){
-  const id=qs("#del-id").value.trim();
-  let users=getUsers();
-  if(!id||!users[id]||id===masterId) return alert("삭제 불가");
-  delete users[id];
-  saveUsers(users);
-  alert(`${id} 계정 삭제됨`);
-  showTab("members");
+function toggleBan() {
+  const u = banUser.value;
+  users[u].banned = !users[u].banned;
+  logs.push(`🚫 마스터 ${u} 계정 ${users[u].banned? '정지':'해제'}`);
+  saveAll();
+  alert(users[u].banned ? '계정이 정지되었습니다.' : '계정 정지가 해제되었습니다.');
 }
 
-// — 잔액 조작
-function editBalance(){
-  const id=qs("#edit-id").value.trim();
-  const delta=parseInt(qs("#edit-amount").value,10);
-  let users=getUsers();
-  if(!users[id]||isNaN(delta)) return alert("❗️ 유효하지 않은 입력");
-  users[id].balance = Math.max(0,(users[id].balance||0)+delta);
-  saveUsers(users);
-  alert(`✅ ${id}님의 잔액이 ${delta>=0?"+":""}${delta} 오이 변경됨`);
-  showTab("members");
+// ==== 순위 & 로그 ====
+function updateRanking() {
+  rankList.innerHTML = '';
+  Object.entries(users)
+    .sort((a,b)=> b[1].balance - a[1].balance)
+    .forEach(([u,d],i) => {
+      rankList.innerHTML += `<li>${i+1}. ${u}: ${d.balance}🥒 ${d.banned? '(정지)':''}</li>`;
+    });
 }
 
-// — 마스터 초기 삽입
-(function initMaster(){
-  let users=getUsers();
-  if(!users[masterId]){
-    users[masterId]={ pw:masterPw, balance:0 };
-    saveUsers(users);
-  }
-})();
+function updateLogs() {
+  logOutput.textContent = logs.join('\n');
+}
 
-// — 간단 qs 헬퍼
-function qs(sel){ return sel.split(",").map(s=>document.querySelector(s.trim())); }
+// ==== 초기화 ====
+auth.classList.remove('hidden');
+app.classList.add('hidden');

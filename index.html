@@ -1,56 +1,56 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>🥒 오이 토스트 거래소</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🥒 오이 토스트</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="login-container" class="card">
-    <h2>🥒 오이 토스트 거래소</h2>
-    <p class="warning">⚠️ 아이디는 반드시 실명으로 입력하세요!</p>
+  <div id="auth-container">
+    <h1>🥒 오이 토스트</h1>
+    <p class="warn">⚠️ 아이디는 반드시 실명으로 해주세요!</p>
     <div id="register">
-      <h3>계정 만들기</h3>
-      <input type="text" id="reg-username" placeholder="이름 (실명)">
-      <input type="password" id="reg-password" placeholder="비밀번호">
-      <button onclick="register()">가입하기</button>
-      <p>이미 계정이 있나요? <a href="#" onclick="toggleAuth()">로그인</a></p>
+      <h2>계정 만들기</h2>
+      <input type="text" id="reg-username" placeholder="이름 (실명)" />
+      <input type="password" id="reg-password" placeholder="비밀번호" />
+      <button onclick="register()">계정 만들기</button>
     </div>
-    <div id="login" style="display:none;">
-      <h3>로그인</h3>
-      <input type="text" id="login-username" placeholder="이름 (실명)">
-      <input type="password" id="login-password" placeholder="비밀번호">
+    <div id="login">
+      <h2>이미 계정이 있나요? 로그인</h2>
+      <input type="text" id="login-username" placeholder="아이디 (실명)" />
+      <input type="password" id="login-password" placeholder="비밀번호" />
       <button onclick="login()">로그인</button>
-      <p>계정이 없나요? <a href="#" onclick="toggleAuth()">회원가입</a></p>
     </div>
   </div>
 
-  <div id="app" style="display:none;">
-    <header>
-      <button id="menu-toggle">☰</button>
-      <h1>🥒 환영합니다! 오이 토스트 거래소입니다</h1>
-    </header>
-
-    <aside id="sidebar" class="hidden">
-      <button onclick="showBalance()">🥒 현재잔액</button>
-      <button onclick="showTransfer()">💸 송금</button>
-      <button onclick="showDeposit()">💰 입금</button>
-      <button onclick="showWithdraw()">🏦 출금</button>
-      <button onclick="showLeaderboard()">🏆 유저 순위</button>
-      <button onclick="logout()">🚪 로그아웃</button>
-      <div id="admin-tools" style="display:none;">
-        <hr>
-        <h4>🛠️ 관리자 기능</h4>
-        <button onclick="showAdjust()">잔액 조정</button>
-        <button onclick="showHistory()">거래내역 보기</button>
-        <button onclick="showBan()">계정 정지/해제</button>
+  <div id="app-container" style="display:none">
+    <div id="sidebar">
+      <button onclick="toggleSidebar()">☰ 메뉴</button>
+      <div id="menu">
+        <button onclick="showBalance()">💰 현재 잔액</button>
+        <button onclick="showTransfer()">💸 송금</button>
+        <button onclick="showDeposit()">🏫 입금</button>
+        <button onclick="showWithdraw()">🏦 출금</button>
+        <button onclick="logout()">🚪 로그아웃</button>
+        <div id="admin-controls" style="display:none">
+          <hr />
+          <h3>👑 관리자 메뉴</h3>
+          <button onclick="showAdjustBalance()">잔액 조정</button>
+          <button onclick="showUserList()">유저 잔액 보기</button>
+          <button onclick="showTransactionLog()">거래내역 보기</button>
+          <button onclick="showRanking()">🥇 유저 순위표</button>
+          <button onclick="showAccountControl()">계정 정지/해제</button>
+        </div>
       </div>
-    </aside>
+    </div>
 
-    <main id="main"></main>
+    <div id="main">
+      <h1>🥒 환영합니다! 여기는 오이 토스트입니다</h1>
+      <div id="content"></div>
+    </div>
   </div>
 
   <script src="script.js"></script>
 </body>
 </html>
-

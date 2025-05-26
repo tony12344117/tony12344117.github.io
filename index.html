@@ -1,57 +1,43 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>오이 거래소</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-
-  <!-- 인증(회원가입/로그인) 화면 -->
+  <!-- 인증 영역 -->
   <div id="auth-container">
     <h1>오이 거래소</h1>
     <p><strong>실명 무조건 사용하세요.</strong></p>
-
-    <section id="register">
+    <section id="register-section">
       <h2>계정 만들기</h2>
-      <input id="reg-username" placeholder="이름 (실명)" /><br>
-      <input id="reg-password" type="password" placeholder="비밀번호" /><br>
-      <button onclick="register()">계정 만들기</button>
+      <input id="reg-username" placeholder="이름 (실명)" autocomplete="off"/><br/>
+      <input id="reg-password" type="password" placeholder="비밀번호"/><br/>
+      <button id="btn-register">계정 만들기</button>
     </section>
-
-    <hr>
-
-    <section id="login">
+    <hr/>
+    <section id="login-section">
       <h2>로그인</h2>
-      <input id="login-username" placeholder="이름" /><br>
-      <input id="login-password" type="password" placeholder="비밀번호" /><br>
-      <button onclick="login()">로그인</button>
+      <input id="login-username" placeholder="이름" autocomplete="off"/><br/>
+      <input id="login-password" type="password" placeholder="비밀번호"/><br/>
+      <button id="btn-login">로그인</button>
     </section>
-
-    <button id="btn-reset" onclick="resetAll()">초기화</button>
-    <p class="small">(모든 계정과 거래내역을 삭제하고 처음부터 시작합니다)</p>
+    <button id="btn-reset">초기화</button>
+    <p class="small">(모든 데이터를 초기화합니다)</p>
   </div>
 
-  <!-- 메인 화면 -->
-  <div id="app" style="display:none;">
+  <!-- 메인 앱 영역 -->
+  <div id="app" class="hidden">
     <header>
-      <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+      <button id="menu-toggle">☰</button>
       <h1>환영합니다! 여기는 오이 거래소 입니다</h1>
-      <button class="logout-btn" onclick="logout()">로그아웃</button>
+      <button id="btn-logout">로그아웃</button>
     </header>
     <div class="container">
-      <aside id="sidebar" class="hidden">
-        <button onclick="showBalance()">현재잔액</button>
-        <button onclick="showTransfer()">송금</button>
-        <button onclick="showDeposit()">입금</button>
-        <button onclick="showWithdraw()">출금</button>
-        <button onclick="showMasterPanel()">마스터 메뉴</button>
-        <button onclick="logout()">로그아웃</button>
-      </aside>
-      <main id="content">
-        <!-- 동적 내용 표시 -->
-      </main>
+      <aside id="sidebar" class="hidden"></aside>
+      <main id="content"></main>
     </div>
   </div>
 

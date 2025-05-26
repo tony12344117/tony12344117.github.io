@@ -1,36 +1,111 @@
-* { box-sizing: border-box; }
+/* reset & 기본 */
+* { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  margin: 0; padding: 0;
-  font-family: Arial, sans-serif;
-  background: #f8f8f8;
+  font-family: 'Noto Sans KR', sans-serif;
+  background: #f0fff4;
+  color: #333;
   text-align: center;
+  padding: 20px;
 }
 .hidden { display: none !important; }
-input, select {
-  width: 200px; padding: 6px; margin: 5px 0;
+.highlight { color: #2e8b57; }
+
+/* 카드 스타일 */
+.card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  padding: 20px;
+  margin: 15px auto;
+  max-width: 320px;
+}
+
+/* 인증 영역 */
+#auth-container h1 {
+  font-size: 1.8em;
+  margin-bottom: 10px;
+}
+#auth-container p { margin-bottom: 20px; }
+
+/* 입력 & 버튼 */
+input, select, textarea {
+  width: 100%;
+  padding: 8px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1em;
 }
 button {
-  padding: 8px 16px; margin: 5px;
-  background: #4CAF50; color: #fff; border: none; border-radius: 4px;
+  padding: 10px 20px;
+  margin-top: 10px;
+  background: #2e8b57;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
   cursor: pointer;
+  font-size: 1em;
+  transition: background 0.3s;
 }
-button:hover { background: #45a049; }
+button:hover {
+  background: #276c48;
+}
+
+/* 헤더 */
 header {
-  display: flex; align-items: center;
-  background: #0057a0; color: #fff; padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #2e8b57;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
 }
-header h1 { flex-grow: 1; margin: 0; font-size: 1.2em; }
+header h1 { font-size: 1.2em; }
+#menu-toggle, #btn-logout {
+  background: none;
+  font-size: 1.4em;
+  color: #fff;
+}
+
+/* 컨테이너 */
 .container {
-  display: flex; height: calc(100vh - 56px);
+  display: flex;
+  margin-top: 20px;
+  height: calc(100vh - 120px);
 }
 aside#sidebar {
-  background: #eee; padding: 10px; width: 160px;
-  display: flex; flex-direction: column; transition: transform 0.3s;
+  width: 180px;
+  flex-shrink: 0;
+  text-align: left;
 }
-aside.hidden { transform: translateX(-180px); }
-aside button { text-align: left; }
-main#content {
-  flex-grow: 1; padding: 20px; background: #fff; overflow-y: auto;
+aside button {
+  width: 100%;
+  text-align: left;
+  margin: 5px 0;
+  background: #eafaf1;
+  color: #2e8b57;
+  padding-left: 12px;
 }
-main#content h2, main#content h3 { color: #0057a0; margin-top: 0; }
+aside button:hover {
+  background: #d4f3e0;
+}
 
+/* 메인 콘텐츠 */
+main#content {
+  flex-grow: 1;
+  padding: 20px;
+  overflow-y: auto;
+  text-align: left;
+}
+main#content h2, main#content h3 {
+  color: #2e8b57;
+  margin-bottom: 10px;
+}
+main#content p {
+  margin: 10px 0;
+  line-height: 1.5;
+}
+main#content textarea {
+  resize: none;
+}

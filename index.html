@@ -45,7 +45,7 @@
           <h3>💸 송금</h3>
           <select id="recipient"></select>
           <input id="sendAmt" type="number" placeholder="금액" />
-          <textarea id="sendMsg" maxlength="80" placeholder="메시지 (80자 이내)"></textarea>
+          <textarea id="sendMsg" maxlength="80" placeholder="메시지 (최대 80자)"></textarea>
           <button onclick="sendMoney()">송금하기</button>
         </div>
 
@@ -67,8 +67,9 @@
         <div id="adjust" class="hidden">
           <h3>👑 잔액 조정</h3>
           <select id="adminUser"></select>
-          <input id="adjustAmt" type="number" placeholder="+/- 금액" />
-          <button onclick="adjustBalance()">적용</button>
+          <input id="adjustAmt" type="number" placeholder="+ 금액 또는 - 금액" />
+          <button onclick="adjustBalance(true)">+ 추가</button>
+          <button onclick="adjustBalance(false)">- 차감</button>
         </div>
 
         <div id="history" class="hidden">
@@ -85,7 +86,7 @@
     </main>
   </div>
 
-  <!-- 스크립트를 BODY 맨 아래에 로드 -->
   <script src="script.js"></script>
 </body>
 </html>
+

@@ -1,149 +1,136 @@
-const MASTER_ID = '정후교';
-const MASTER_PW = '302118';
-
+const masterId = "정후교";
+const masterPw = "302118";
 let currentUser = null;
-let deleteConfirmStage = 0;
 
 function saveUsers(users) {
-  localStorage.setItem('users', JSON.stringify(users));
+  localStorage.setItem("users", JSON.stringify(users));
 }
 
-function loadUsers() {
-  return JSON.parse(localStorage.getItem('users') || '{}');
+function getUsers() {
+  return JSON.parse(localStorage.getItem("users") || "{}");
+}
+
+function showSignup() {
+  document.getElementById("login-screen").classList.add("hidden");
+  document.getElementById("signup-screen").classList.remove("hidden");
 }
 
 function showLogin() {
-  hideAll();
-  document.getElementById('login-section').style.display = 'block';
+  document.getElementById("signup-screen").classList.add("hidden");
+  document.getElementById("login-screen").classList.remove("hidden");
 }
 
-function showRegister() {
-  hideAll();
-  document.getElementById('register-section').style.display = 'block';
-}
-
-function showBalance() {
-  const users = loadUsers();
-  const balance = users[currentUser]?.balance || 0;
-  alert(`현재 잔액: ${balance} 오이`);
-}
-
-function showSend() {
-  hideAll();
-  document.getElementById('send-section').style.display = 'block';
-}
-
-function showDeposit() {
-  alert("학교에서 사업시간에 정후교한테 찾아와서 말하세요.");
-}
-
-function showWithdraw() {
-  alert("학교에 와서 정후교한테 말하세요.");
-}
-
-function showAdjust() {
-  hideAll();
-  document.getElementById('adjust-section').style.display = 'block';
-}
-
-function showDeleteAccount() {
-  hideAll();
-  deleteConfirmStage = 0;
-  document.getElementById('delete-confirm-message').textContent = '';
-  document.getElementById('delete-section').style.display = 'block';
-}
-
-function confirmDeleteStep1() {
-  deleteConfirmStage++;
-  const msg = [
-    '정말로 계정을 삭제하시겠습니까? 되돌릴 수 없습니다. (2단계)',
-    '진짜 마지막입니다. 정말 삭제할까요? (3단계)',
-    ''
-  ];
-  if (deleteConfirmStage < 3) {
-    document.getElementById('delete-confirm-message').textContent = msg[deleteConfirmStage - 1];
-  } else {
-    const users = loadUsers();
-    delete users[currentUser];
-    saveUsers(users);
-    alert("계정이 삭제되었습니다.");
-    currentUser = null;
-    showLogin();
-  }
-}
-
-function login() {
-  const id = document.getElementById('login-username').value.trim();
-  const pw = document.getElementById('login-password').value;
-  const users = loadUsers();
-
-  if (id === MASTER_ID && pw === MASTER_PW) {
-    if (!users[MASTER_ID]) users[MASTER_ID] = { password: MASTER_PW, balance: 0 };
-    currentUser = MASTER_ID;
-    showHome(true);
-    return;
-  }
-
-  if (!users[id] || users[id].password !== pw) {
-    alert("아이디 또는 비밀번호가 틀렸습니다.");
-    return;
-  }
-
-  currentUser = id;
-  showHome(false);
-}
-
-function register() {
-  const id = document.getElementById('register-username').value.trim();
-  const pw = document.getElementById('register-password').value;
-  const users = loadUsers();
-
-  if (!id || !pw) {
-    alert("아이디와 비밀번호를 모두 입력하세요.");
-    return;
-  }
+function signup() {
+  const id = document.getElementById("signup-id").value;
+  const pw = document.getElementById("signup-pw").value;
+  const users = getUsers();
 
   if (users[id]) {
     alert("이미 존재하는 아이디입니다.");
     return;
   }
 
-  users[id] = { password: pw, balance: 0 };
+  users[id] = { pw, balance: 100 };  // 초기 보유 100 오이
   saveUsers(users);
-  alert("회원가입 완료!");
+  alert("가입 성공! 초기 100오이 지급!");
   showLogin();
+}
+
+function login() {
+  const id = document.getElementById("login-id").value;
+  const pw = document.getElementById("login-pw").value;
+  const users = getUsers();
+
+  if ((id === masterId && pw === masterPw) || (users[id] && users[id].pw === pw)) {
+    currentUser = id;
+    document.getElementById("login-screen").classList.add("hidden");
+    document.getElementById("signup-screen").classList.add("hidden");
+    document.getElementById("home-screen").classList.remove("hidden");
+    document.getElementById("welcome-text").innerText = `환영합니다, ${id}님!`;
+    showTab("balance");
+  } else {
+    alert("로그인 실패");
+  }
 }
 
 function logout() {
   currentUser = null;
-  showLogin();
+  location.reload();
 }
 
-function showHome(isAdmin = false) {
-  hideAll();
-  document.getElementById('home-section').style.display = 'block';
-  document.getElementById('welcome-text').textContent = `환영합니다, ${currentUser}님`;
-  document.getElementById('admin-btn').style.display = isAdmin ? 'block' : 'none';
+function toggleSidebar() {
+  document.getElementById("menu").classList.toggle("hidden");
+}
+
+function showTab(tab) {
+  const users = getUsers();
+  let html = "";
+
+  if (tab === "balance") {
+    html = `<h2>💰 현재 오이 잔액</h2><p>${users[currentUser]?.balance || 0} 오이</p>`;
+  }
+
+  if (tab === "transfer") {
+    html = `<h2>💸 송금</h2>
+            <select id="recipient">` +
+      Object.keys(users).filter(u => u !== currentUser).map(u => `<option value="${u}">${u}</option>`).join("") +
+      `</select>
+      <input type="number" id="amount" placeholder="금액" />
+      <button onclick="sendMoney()">보내기</button>`;
+  }
+
+  if (tab === "members") {
+    html = `<h2>👥 가입자 목록</h2><ul>`;
+    for (let id in users) {
+      html += `<li>${id}</li>`;
+    }
+    html += `</ul>`;
+    if (currentUser === masterId) {
+      html += `<h3>❌ 계정 삭제</h3>
+               <input placeholder="삭제할 아이디" id="del-id" />
+               <button onclick="deleteUser()">삭제</button>`;
+    }
+  }
+
+  if (tab === "ranking") {
+    const ranking = Object.entries(users).sort((a, b) => b[1].balance - a[1].balance);
+    html = `<h2>🥇 오이 부자 순위</h2><ol>`;
+    ranking.forEach(([id, data]) => {
+      html += `<li>${id} - ${data.balance} 오이</li>`;
+    });
+    html += `</ol>`;
+  }
+
+  document.getElementById("tab-content").innerHTML = html;
+}
+
+function deleteUser() {
+  const id = document.getElementById("del-id").value;
+  const users = getUsers();
+  if (id === masterId) {
+    alert("마스터 계정은 삭제할 수 없습니다.");
+    return;
+  }
+  if (users[id]) {
+    delete users[id];
+    saveUsers(users);
+    alert(`${id} 계정을 삭제했습니다.`);
+    showTab("members");
+  } else {
+    alert("존재하지 않는 아이디입니다.");
+  }
 }
 
 function sendMoney() {
-  const to = document.getElementById('send-to').value.trim();
-  const amount = parseInt(document.getElementById('send-amount').value);
-  const msg = document.getElementById('send-message').value;
-  const users = loadUsers();
+  const to = document.getElementById("recipient").value;
+  const amount = parseInt(document.getElementById("amount").value);
+  const users = getUsers();
 
-  if (!users[to]) {
-    alert("받는 사람이 존재하지 않습니다.");
+  if (amount <= 0 || isNaN(amount)) {
+    alert("올바른 금액을 입력해주세요.");
     return;
   }
-  if (to === currentUser) {
-    alert("자기 자신에게 송금할 수 없습니다.");
-    return;
-  }
-  if (isNaN(amount) || amount <= 0) {
-    alert("올바른 금액을 입력하세요.");
-    return;
-  }
+
   if (users[currentUser].balance < amount) {
     alert("잔액이 부족합니다.");
     return;
@@ -152,30 +139,6 @@ function sendMoney() {
   users[currentUser].balance -= amount;
   users[to].balance += amount;
   saveUsers(users);
-  alert(`${to}에게 ${amount} 오이를 송금했습니다.\n메시지: ${msg}`);
-  goHome();
-}
-
-function adjustBalance() {
-  const id = document.getElementById('adjust-user').value.trim();
-  const amount = parseInt(document.getElementById('adjust-amount').value);
-  const users = loadUsers();
-
-  if (!users[id]) {
-    alert("해당 사용자가 존재하지 않습니다.");
-    return;
-  }
-
-  users[id].balance = (users[id].balance || 0) + amount;
-  saveUsers(users);
-  alert(`${id}의 잔액이 ${amount > 0 ? '+' : ''}${amount} 오이 변경되었습니다.`);
-  goHome();
-}
-
-function goHome() {
-  showHome(currentUser === MASTER_ID);
-}
-
-function hideAll() {
-  document.querySelectorAll("div[id$='section']").forEach(div => div.style.display = 'none');
+  alert(`${to}님에게 ${amount}오이를 보냈습니다.`);
+  showTab("balance");
 }

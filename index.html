@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>🥒🍞 오이 토스트 거래소</title>
   <link rel="stylesheet" href="style.css"/>
 </head>
@@ -11,15 +11,13 @@
   <div id="auth-container">
     <h1>🥒🍞 <span class="highlight">오이 토스트</span> 거래소</h1>
     <p><strong>실명 무조건 사용하세요.</strong></p>
-
-    <section id="register-section" class="card">
+    <section class="card">
       <h2>🆕 계정 만들기</h2>
       <input id="reg-username" placeholder="👤 이름 (실명)" autocomplete="off"/><br/>
       <input id="reg-password" type="password" placeholder="🔒 비밀번호"/><br/>
       <button id="btn-register">계정 만들기</button>
     </section>
-
-    <section id="login-section" class="card">
+    <section class="card">
       <h2>🔑 로그인</h2>
       <input id="login-username" placeholder="👤 이름" autocomplete="off"/><br/>
       <input id="login-password" type="password" placeholder="🔒 비밀번호"/><br/>
@@ -29,7 +27,7 @@
 
   <!-- 메인 앱 영역 -->
   <div id="app" class="hidden">
-    <header>
+    <header class="card">
       <button id="menu-toggle">☰</button>
       <h1>🎉 환영합니다! <span class="highlight">오이 토스트</span> 거래소</h1>
       <button id="btn-logout">🚪 로그아웃</button>
@@ -43,4 +41,3 @@
   <script src="script.js"></script>
 </body>
 </html>
-

@@ -2,42 +2,37 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>오이 거래소</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="app">
-    <div id="login-screen" class="screen">
-      <h1>🥒 오이 거래소</h1>
-      <input type="text" id="login-id" placeholder="아이디" />
-      <input type="password" id="login-pw" placeholder="비밀번호" />
-      <button onclick="login()">로그인</button>
-      <button onclick="showSignup()">회원가입</button>
-    </div>
+  <div id="login-screen">
+    <h2>로그인</h2>
+    <input id="login-id" placeholder="아이디" />
+    <input id="login-pw" type="password" placeholder="비밀번호" />
+    <button onclick="login()">로그인</button>
+    <p><a href="#" onclick="showSignup()">회원가입</a></p>
+  </div>
 
-    <div id="signup-screen" class="screen hidden">
-      <h2>회원가입</h2>
-      <input type="text" id="signup-id" placeholder="아이디" />
-      <input type="password" id="signup-pw" placeholder="비밀번호" />
-      <button onclick="signup()">가입하기</button>
-      <button onclick="showLogin()">뒤로</button>
-    </div>
+  <div id="signup-screen" class="hidden">
+    <h2>회원가입</h2>
+    <input id="signup-id" placeholder="아이디" />
+    <input id="signup-pw" type="password" placeholder="비밀번호" />
+    <button onclick="signup()">가입하기</button>
+    <p><a href="#" onclick="showLogin()">로그인으로 돌아가기</a></p>
+  </div>
 
-    <div id="home-screen" class="screen hidden">
-      <div class="sidebar">
-        <button onclick="toggleSidebar()">☰</button>
-        <ul id="menu" class="hidden">
-          <li onclick="showTab('balance')">💰 현재잔액</li>
-          <li onclick="showTab('transfer')">💸 송금</li>
-          <li onclick="showTab('members')">👥 가입자 목록</li>
-          <li onclick="showTab('ranking')">🥇 보유 순위</li>
-          <li onclick="logout()">🚪 로그아웃</li>
-        </ul>
-      </div>
-      <h1 id="welcome-text"></h1>
-      <div id="tab-content"></div>
+  <div id="home-screen" class="hidden">
+    <button onclick="toggleSidebar()">☰ 메뉴</button>
+    <h1 id="welcome-text"></h1>
+    <div id="menu" class="hidden">
+      <button onclick="showTab('balance')">현재잔액</button>
+      <button onclick="showTab('transfer')">송금</button>
+      <button onclick="showTab('members')">가입자 목록</button>
+      <button onclick="showTab('ranking')">오이 순위</button>
+      <button onclick="logout()">로그아웃</button>
     </div>
+    <div id="tab-content"></div>
   </div>
 
   <script src="script.js"></script>

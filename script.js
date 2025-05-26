@@ -1,175 +1,115 @@
-// 전체 앱 로직을 포함한 JavaScript (오이 토스트 앱)
+const master = { id: '정후교', pass: '302118' };
+let users = JSON.parse(localStorage.getItem('users') || '{}');
+let logs = JSON.parse(localStorage.getItem('logs') || '[]');
+let current = null;
 
-const masterId = "정후교";
-const masterPw = "302118";
-
-const UI = {
-  loginPage: document.getElementById("login-page"),
-  registerPage: document.getElementById("register-page"),
-  mainPage: document.getElementById("main-page"),
-  welcomeText: document.getElementById("welcome-text"),
-  sidebar: document.getElementById("sidebar"),
-  toggleSidebarBtn: document.getElementById("toggle-sidebar"),
-  userList: document.getElementById("user-list"),
-  balanceDisplay: document.getElementById("balance"),
-  messageDisplay: document.getElementById("message"),
-  transferForm: document.getElementById("transfer-form"),
-  logoutBtn: document.getElementById("logout-btn"),
-  adminPanel: document.getElementById("admin-panel"),
-  historyDisplay: document.getElementById("history"),
-  leaderboardDisplay: document.getElementById("leaderboard")
-};
-
-let currentUser = null;
-
-function saveUsers(users) {
-  localStorage.setItem("users", JSON.stringify(users));
+function save() {
+  localStorage.setItem('users', JSON.stringify(users));
+  localStorage.setItem('logs', JSON.stringify(logs));
 }
 
-function loadUsers() {
-  return JSON.parse(localStorage.getItem("users")) || {};
+function register() {
+  const name = document.getElementById('authName').value.trim();
+  const pass = document.getElementById('authPass').value;
+  if (!name || !pass) return alert('이름과 비밀번호를 입력하세요');
+  if (users[name]) return alert('이미 존재하는 이름입니다');
+  users[name] = { pass, balance: 0, banned: false };
+  save();
+  alert('계정이 생성되었습니다');
 }
 
-function saveHistory(history) {
-  localStorage.setItem("history", JSON.stringify(history));
+function login() {
+  const name = document.getElementById('authName').value.trim();
+  const pass = document.getElementById('authPass').value;
+  if (!users[name] && !(name === master.id && pass === master.pass)) return alert('계정이 없습니다');
+  if (name !== master.id && users[name].pass !== pass) return alert('비밀번호가 틀렸습니다');
+  if (users[name]?.banned) return alert('이 계정은 정지되었습니다');
+  current = name;
+  document.getElementById('auth').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+  document.getElementById('currentUser').innerText = name;
+  updateRecipientList();
+  updateRanking();
+  if (name === master.id) {
+    document.getElementById('adminPanel').classList.remove('hidden');
+  } else {
+    document.getElementById('adminPanel').classList.add('hidden');
+  }
+  showSection('balance');
 }
 
-function loadHistory() {
-  return JSON.parse(localStorage.getItem("history")) || [];
+function logout() {
+  current = null;
+  document.getElementById('app').classList.add('hidden');
+  document.getElementById('auth').classList.remove('hidden');
 }
 
-function showPage(page) {
-  UI.loginPage.style.display = "none";
-  UI.registerPage.style.display = "none";
-  UI.mainPage.style.display = "none";
-  page.style.display = "block";
+function showSection(id) {
+  ['balance', 'send', 'deposit', 'withdraw', 'ranking'].forEach(s => {
+    document.getElementById(s).classList.add('hidden');
+  });
+  document.getElementById(id).classList.remove('hidden');
+  if (id === 'balance') {
+    document.getElementById('balance').innerText = `🥒 잔액: ${users[current]?.balance ?? 0} 오이`;
+  }
 }
 
-function updateBalance() {
-  const users = loadUsers();
-  UI.balanceDisplay.innerText = `🥒 ${users[currentUser].balance} 오이`;
+function updateRecipientList() {
+  const sel = document.getElementById('recipientList');
+  const adminSel = document.getElementById('adminUserList');
+  sel.innerHTML = '';
+  adminSel.innerHTML = '';
+  Object.keys(users).forEach(name => {
+    if (name !== current) sel.innerHTML += `<option>${name}</option>`;
+    adminSel.innerHTML += `<option>${name}</option>`;
+  });
 }
 
-function updateUserList() {
-  const users = loadUsers();
-  UI.userList.innerHTML = Object.keys(users).map(
-    user => `<option value="${user}">${user}</option>`
-  ).join("");
+function sendMoney() {
+  const to = document.getElementById('recipientList').value;
+  const amount = parseInt(document.getElementById('sendAmount').value);
+  const msg = document.getElementById('sendMsg').value.trim();
+  if (!amount || amount <= 0) return alert('유효한 금액을 입력하세요');
+  if (!msg || msg.length > 80) return alert('메시지를 1자 이상 80자 이내로 입력하세요');
+  if (users[current].balance < amount) return alert('잔액 부족');
+  users[current].balance -= amount;
+  users[to].balance += amount;
+  logs.push(`${current} → ${to} : ${amount}🥒 | 메시지: ${msg}`);
+  save();
+  alert('송금 완료');
+  document.getElementById('sendAmount').value = '';
+  document.getElementById('sendMsg').value = '';
+  updateRanking();
+  showSection('balance');
 }
 
-function updateHistory() {
-  const history = loadHistory();
-  UI.historyDisplay.innerHTML = history.map(h =>
-    `<li>${h}</li>`
-  ).join("");
+function adjustBalance() {
+  const name = document.getElementById('adminUserList').value;
+  const amount = parseInt(document.getElementById('adminAdjust').value);
+  if (!amount) return alert('금액 입력');
+  users[name].balance += amount;
+  logs.push(`🛠️ 마스터가 ${name}의 오이를 ${amount > 0 ? '+' : ''}${amount}🥒 ${amount > 0 ? '추가' : '차감'}`);
+  save();
+  alert('조정 완료');
+  updateRanking();
 }
 
-function updateLeaderboard() {
-  const users = loadUsers();
-  const sorted = Object.entries(users).sort((a,b)=>b[1].balance - a[1].balance);
-  UI.leaderboardDisplay.innerHTML = sorted.map(([user, data], i) =>
-    `<li>${i+1}. ${user} - 🥒 ${data.balance} 오이</li>`
-  ).join("");
+function toggleBan() {
+  const name = document.getElementById('adminUserList').value;
+  users[name].banned = !users[name].banned;
+  logs.push(`🚫 마스터가 ${name} 계정을 ${users[name].banned ? '정지' : '해제'}시킴`);
+  save();
+  alert(users[name].banned ? '계정 정지 완료' : '계정 정지 해제 완료');
 }
 
-function showAdminPanel() {
-  if (currentUser !== masterId) return;
-  UI.adminPanel.style.display = "block";
-  const users = loadUsers();
-  UI.adminPanel.innerHTML = Object.keys(users).map(user => `
-    <div>
-      ${user} - 🥒 ${users[user].balance} 오이
-      <button onclick="modifyUser('${user}', 'add')">+10</button>
-      <button onclick="modifyUser('${user}', 'subtract')">-10</button>
-      <button onclick="toggleBan('${user}')">
-        ${users[user].banned ? '해제' : '정지'}
-      </button>
-    </div>
-  `).join("");
+function updateRanking() {
+  const rankList = document.getElementById('rankList');
+  rankList.innerHTML = '';
+  const arr = Object.entries(users).sort((a,b) => b[1].balance - a[1].balance);
+  arr.forEach(([name, data], i) => {
+    rankList.innerHTML += `<li>${i+1}위: ${name} - ${data.balance} 🥒${data.banned ? ' (정지됨)' : ''}</li>`;
+  });
+  if (current === master.id) {
+    document.getElementById('logOutput').textContent = logs.join('\n');
+  }
 }
-
-function modifyUser(user, action) {
-  const users = loadUsers();
-  if (!users[user]) return;
-  if (action === "add") users[user].balance += 10;
-  else if (action === "subtract") users[user].balance = Math.max(0, users[user].balance - 10);
-  saveUsers(users);
-  updateBalance();
-  showAdminPanel();
-  updateLeaderboard();
-}
-
-function toggleBan(user) {
-  const users = loadUsers();
-  users[user].banned = !users[user].banned;
-  saveUsers(users);
-  showAdminPanel();
-}
-
-// 등록
-document.getElementById("register-form").onsubmit = e => {
-  e.preventDefault();
-  const id = document.getElementById("register-id").value;
-  const pw = document.getElementById("register-pw").value;
-  if (!id || !pw) return;
-  const users = loadUsers();
-  if (users[id]) return alert("이미 존재하는 아이디입니다");
-  users[id] = { password: pw, balance: 0, banned: false };
-  saveUsers(users);
-  alert("계정이 생성되었습니다");
-  showPage(UI.loginPage);
-};
-
-// 로그인
-document.getElementById("login-form").onsubmit = e => {
-  e.preventDefault();
-  const id = document.getElementById("login-id").value;
-  const pw = document.getElementById("login-pw").value;
-  const users = loadUsers();
-  if (!users[id] || users[id].password !== pw) return alert("로그인 실패");
-  if (users[id].banned) return alert("정지된 계정입니다");
-  currentUser = id;
-  showPage(UI.mainPage);
-  UI.welcomeText.innerText = `🥒 환영합니다, ${id}님! 여기는 오이 토스트 입니다.`;
-  updateBalance();
-  updateUserList();
-  updateLeaderboard();
-  showAdminPanel();
-  updateHistory();
-};
-
-// 사이드바 토글
-UI.toggleSidebarBtn.onclick = () => {
-  UI.sidebar.classList.toggle("open");
-};
-
-// 송금
-UI.transferForm.onsubmit = e => {
-  e.preventDefault();
-  const target = document.getElementById("recipient").value;
-  const amount = parseInt(document.getElementById("amount").value);
-  const msg = document.getElementById("message-input").value.slice(0, 80);
-  if (!target || !amount || amount <= 0 || !msg) return;
-  const users = loadUsers();
-  if (users[currentUser].balance < amount) return alert("잔액 부족");
-  users[currentUser].balance -= amount;
-  users[target].balance += amount;
-  saveUsers(users);
-  updateBalance();
-  updateLeaderboard();
-  const history = loadHistory();
-  history.unshift(`${currentUser} → ${target}에게 🥒 ${amount} 오이 보냄: ${msg}`);
-  saveHistory(history);
-  updateHistory();
-  alert("송금 완료");
-};
-
-// 로그아웃
-UI.logoutBtn.onclick = () => {
-  currentUser = null;
-  showPage(UI.loginPage);
-};
-
-// 초기화
-showPage(UI.registerPage);
-

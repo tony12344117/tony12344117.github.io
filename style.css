@@ -1,69 +1,20 @@
-body {
-  font-family: 'Arial', sans-serif;
-  margin: 0;
-  padding: 0;
-  background: #f0fff0;
-}
-
-.app {
-  max-width: 500px;
-  margin: auto;
-  padding: 20px;
-}
-
-.screen {
-  text-align: center;
-}
-
 .hidden {
   display: none;
 }
 
-input {
-  display: block;
-  width: 80%;
-  margin: 10px auto;
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+body {
+  font-family: 'Arial';
+  padding: 20px;
+  background: #f0fff0;
 }
 
-button {
-  padding: 10px 20px;
-  margin: 5px;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 6px;
-  background-color: #b6fcb6;
-  border: none;
-}
-
-.sidebar {
-  text-align: left;
-}
-
-.sidebar button {
-  font-size: 24px;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-.sidebar ul {
-  list-style: none;
-  padding: 0;
-}
-
-.sidebar li {
-  padding: 10px;
-  background: #e0ffe0;
+input, button {
   margin: 5px 0;
-  cursor: pointer;
-  border-radius: 6px;
-  transition: background 0.2s;
+  padding: 8px;
+  font-size: 14px;
 }
 
-.sidebar li:hover {
-  background: #d2fbd2;
+#menu button {
+  display: block;
+  margin-bottom: 10px;
 }

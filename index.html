@@ -2,46 +2,65 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>오이 거래소</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="app">
-    <!-- 로그인 화면 -->
-    <div id="login-screen" class="card">
-      <h2>오이 거래소</h2>
-      <input id="login-id" placeholder="아이디" />
-      <input id="login-pw" type="password" placeholder="비밀번호" />
-      <button onclick="login()">로그인</button>
-      <p><a href="#" onclick="showSignup()">회원가입</a></p>
-    </div>
+  <div id="login-page" class="page">
+    <h2>오이 거래소 로그인</h2>
+    <input type="text" id="login-username" placeholder="아이디"><br>
+    <input type="password" id="login-password" placeholder="비밀번호"><br>
+    <button onclick="login()">로그인</button>
+    <p>계정이 없으신가요? <button onclick="showRegister()">회원가입</button></p>
+  </div>
 
-    <!-- 회원가입 화면 -->
-    <div id="signup-screen" class="card hidden">
-      <h2>회원가입</h2>
-      <input id="signup-id" placeholder="아이디" />
-      <input id="signup-pw" type="password" placeholder="비밀번호" />
-      <button onclick="signup()">가입하기</button>
-      <p><a href="#" onclick="showLogin()">돌아가기</a></p>
-    </div>
+  <div id="register-page" class="page hidden">
+    <h2>회원가입</h2>
+    <input type="text" id="register-username" placeholder="아이디"><br>
+    <input type="password" id="register-password" placeholder="비밀번호"><br>
+    <button onclick="register()">가입하기</button>
+    <button onclick="showLogin()">뒤로가기</button>
+  </div>
 
-    <!-- 홈 화면 -->
-    <div id="home-screen" class="hidden">
-      <div class="top-bar">
-        <button onclick="toggleSidebar()">☰</button>
-        <span id="welcome-text"></span>
+  <div id="home-page" class="page hidden">
+    <div class="sidebar">
+      <button onclick="showSection('balance')">현재잔액</button>
+      <button onclick="showSection('transfer')">송금</button>
+      <button onclick="showSection('deposit')">입금</button>
+      <button onclick="showSection('withdraw')">출금</button>
+      <button onclick="showSection('admin')">관리기능</button>
+      <button onclick="confirmDelete()">계정삭제</button>
+      <button onclick="logout()">로그아웃</button>
+    </div>
+    <div class="content">
+      <h2 id="welcome-message">환영합니다!</h2>
+      <div id="balance-section" class="section hidden"></div>
+      <div id="transfer-section" class="section hidden">
+        <h3>송금</h3>
+        <input type="text" id="recipient" placeholder="받는사람"><br>
+        <input type="number" id="amount" placeholder="금액"><br>
+        <input type="text" id="note" placeholder="메모"><br>
+        <button onclick="transfer()">송금하기</button>
       </div>
-      <div id="menu" class="sidebar hidden">
-        <button onclick="showTab('balance')">💰 내 잔액</button>
-        <button onclick="showTab('transfer')">💸 송금</button>
-        <button onclick="showTab('members')">👥 회원 목록</button>
-        <button onclick="showTab('ranking')">🏆 오이 순위</button>
-        <button onclick="logout()">🚪 로그아웃</button>
+      <div id="deposit-section" class="section hidden">
+        <h3>입금</h3>
+        <p>학교에서 사업시간에 정후교한테 찾아와서 말하세요</p>
       </div>
-      <div id="tab-content" class="card"></div>
+      <div id="withdraw-section" class="section hidden">
+        <h3>출금</h3>
+        <p>학교에 와서 정후교한테 말하세요</p>
+      </div>
+      <div id="admin-section" class="section hidden">
+        <h3>관리자 기능</h3>
+        <p>ID: <input type="text" id="admin-target" placeholder="대상 아이디"></p>
+        <p>금액 조정: <input type="number" id="admin-amount" placeholder="+/- 금액"></p>
+        <button onclick="adjustBalance()">조정하기</button>
+        <div id="admin-result"></div>
+      </div>
     </div>
   </div>
+
   <script src="script.js"></script>
 </body>
 </html>

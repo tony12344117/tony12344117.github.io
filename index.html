@@ -2,55 +2,215 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>🥒 오이 토스트</title>
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+    }
+    header {
+      background-color: #a3d977;
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.5rem;
+      color: white;
+    }
+    #container {
+      display: flex;
+    }
+    #sidebar {
+      width: 200px;
+      background-color: #def8cc;
+      height: 100vh;
+      padding-top: 1rem;
+    }
+    #sidebar button {
+      display: block;
+      margin: 1rem;
+      padding: 0.5rem;
+      width: 80%;
+      border: none;
+      background-color: #c7efb2;
+      cursor: pointer;
+    }
+    #main {
+      flex-grow: 1;
+      padding: 1rem;
+    }
+    .hidden {
+      display: none;
+    }
+    .user-entry {
+      margin: 0.5rem 0;
+    }
+    input, textarea {
+      margin-top: 0.5rem;
+      display: block;
+      padding: 0.5rem;
+      width: 100%;
+      max-width: 300px;
+    }
+    textarea {
+      resize: none;
+    }
+    .emoji {
+      font-size: 1.2rem;
+    }
+  </style>
 </head>
 <body>
-  <div id="auth-container">
-    <h1>🥒 오이 토스트</h1>
-    <p class="warn">⚠️ 아이디는 반드시 실명으로 해주세요!</p>
-    <div id="register">
-      <h2>계정 만들기</h2>
-      <input type="text" id="reg-username" placeholder="이름 (실명)" />
-      <input type="password" id="reg-password" placeholder="비밀번호" />
-      <button onclick="register()">계정 만들기</button>
-    </div>
-    <div id="login">
-      <h2>이미 계정이 있나요? 로그인</h2>
-      <input type="text" id="login-username" placeholder="아이디 (실명)" />
-      <input type="password" id="login-password" placeholder="비밀번호" />
-      <button onclick="login()">로그인</button>
-    </div>
-  </div>
-
-  <div id="app-container" style="display:none">
+  <header>🥒 오이 토스트</header>
+  <div id="container">
     <div id="sidebar">
-      <button onclick="toggleSidebar()">☰ 메뉴</button>
-      <div id="menu">
-        <button onclick="showBalance()">💰 현재 잔액</button>
-        <button onclick="showTransfer()">💸 송금</button>
-        <button onclick="showDeposit()">🏫 입금</button>
-        <button onclick="showWithdraw()">🏦 출금</button>
-        <button onclick="logout()">🚪 로그아웃</button>
-        <div id="admin-controls" style="display:none">
-          <hr />
-          <h3>👑 관리자 메뉴</h3>
-          <button onclick="showAdjustBalance()">잔액 조정</button>
-          <button onclick="showUserList()">유저 잔액 보기</button>
-          <button onclick="showTransactionLog()">거래내역 보기</button>
-          <button onclick="showRanking()">🥇 유저 순위표</button>
-          <button onclick="showAccountControl()">계정 정지/해제</button>
+      <button onclick="showSection('balance')">현재 잔액</button>
+      <button onclick="showSection('send')">송금</button>
+      <button onclick="showSection('deposit')">입금</button>
+      <button onclick="showSection('withdraw')">출금</button>
+      <button onclick="showSection('ranking')">순위표</button>
+      <button onclick="logout()">로그아웃</button>
+    </div>
+    <div id="main">
+      <div id="auth">
+        <h2>🥒 오이 토스트에 오신 것을 환영합니다</h2>
+        <p><strong>실명 무조건 사용하세요!</strong></p>
+        <input type="text" id="authName" placeholder="이름 (실명)" />
+        <input type="password" id="authPass" placeholder="비밀번호" />
+        <button onclick="register()">계정 만들기</button>
+        <p>이미 계정이 있나요?</p>
+        <button onclick="login()">로그인</button>
+      </div>
+
+      <div id="app" class="hidden">
+        <h2>환영합니다 🥒 <span id="currentUser"></span>님!</h2>
+        <div id="balance" class="hidden"></div>
+        <div id="send" class="hidden">
+          <h3>🥒 송금</h3>
+          <select id="recipientList"></select>
+          <input type="number" id="sendAmount" placeholder="금액" />
+          <textarea id="sendMsg" maxlength="80" placeholder="메시지 (최대 80자)"></textarea>
+          <button onclick="sendMoney()">🥒 송금하기</button>
+        </div>
+        <div id="deposit" class="hidden">학교에서 사업시간에 정후교한테 찾아와서 말하세요 🥒</div>
+        <div id="withdraw" class="hidden">학교에 와서 정후교한테 말하세요 🥒</div>
+        <div id="ranking" class="hidden">
+          <h3>🥒 유저 순위표</h3>
+          <ul id="rankList"></ul>
+        </div>
+        <div id="adminPanel" class="hidden">
+          <h3>🥒 마스터 관리자 패널</h3>
+          <select id="adminUserList"></select>
+          <input type="number" id="adminAdjust" placeholder="조정할 금액 (+/- 포함)" />
+          <button onclick="adjustBalance()">🥒 오이 조정</button>
+          <button onclick="toggleBan()">🥒 계정 정지/해제</button>
+          <h4>🥒 전체 거래 내역</h4>
+          <pre id="logOutput"></pre>
         </div>
       </div>
     </div>
-
-    <div id="main">
-      <h1>🥒 환영합니다! 여기는 오이 토스트입니다</h1>
-      <div id="content"></div>
-    </div>
   </div>
+  <script>
+    const master = { id: '정후교', pass: '302118' };
+    let users = JSON.parse(localStorage.getItem('users') || '{}');
+    let logs = JSON.parse(localStorage.getItem('logs') || '[]');
+    let current = null;
 
-  <script src="script.js"></script>
+    function save() {
+      localStorage.setItem('users', JSON.stringify(users));
+      localStorage.setItem('logs', JSON.stringify(logs));
+    }
+
+    function register() {
+      const name = document.getElementById('authName').value;
+      const pass = document.getElementById('authPass').value;
+      if (!name || !pass) return alert('이름과 비밀번호를 입력하세요');
+      if (users[name]) return alert('이미 존재하는 이름입니다');
+      users[name] = { pass, balance: 0, banned: false };
+      save();
+      alert('계정이 생성되었습니다');
+    }
+
+    function login() {
+      const name = document.getElementById('authName').value;
+      const pass = document.getElementById('authPass').value;
+      if (!users[name] && !(name === master.id && pass === master.pass)) return alert('계정이 없습니다');
+      if (name !== master.id && users[name].pass !== pass) return alert('비밀번호가 틀렸습니다');
+      if (users[name]?.banned) return alert('이 계정은 정지되었습니다');
+      current = name;
+      document.getElementById('auth').classList.add('hidden');
+      document.getElementById('app').classList.remove('hidden');
+      document.getElementById('currentUser').innerText = name;
+      updateRecipientList();
+      updateRanking();
+      if (name === master.id) document.getElementById('adminPanel').classList.remove('hidden');
+    }
+
+    function logout() {
+      current = null;
+      document.getElementById('app').classList.add('hidden');
+      document.getElementById('auth').classList.remove('hidden');
+    }
+
+    function showSection(id) {
+      ['balance', 'send', 'deposit', 'withdraw', 'ranking'].forEach(s => {
+        document.getElementById(s).classList.add('hidden');
+      });
+      document.getElementById(id).classList.remove('hidden');
+      if (id === 'balance') document.getElementById('balance').innerText = `🥒 잔액: ${users[current]?.balance ?? 0} 오이`;
+    }
+
+    function updateRecipientList() {
+      const sel = document.getElementById('recipientList');
+      const adminSel = document.getElementById('adminUserList');
+      sel.innerHTML = '';
+      adminSel.innerHTML = '';
+      Object.keys(users).forEach(name => {
+        if (name !== current) sel.innerHTML += `<option>${name}</option>`;
+        adminSel.innerHTML += `<option>${name}</option>`;
+      });
+    }
+
+    function sendMoney() {
+      const to = document.getElementById('recipientList').value;
+      const amount = parseInt(document.getElementById('sendAmount').value);
+      const msg = document.getElementById('sendMsg').value;
+      if (!amount || amount <= 0 || !msg || msg.length > 80) return alert('유효한 금액과 80자 이내 메시지를 입력하세요');
+      if (users[current].balance < amount) return alert('잔액 부족');
+      users[current].balance -= amount;
+      users[to].balance += amount;
+      logs.push(`${current} → ${to} : ${amount}🥒 | 메시지: ${msg}`);
+      save();
+      alert('송금 완료');
+    }
+
+    function adjustBalance() {
+      const name = document.getElementById('adminUserList').value;
+      const amount = parseInt(document.getElementById('adminAdjust').value);
+      if (!amount) return alert('금액 입력');
+      users[name].balance += amount;
+      logs.push(`🛠️ 마스터가 ${name}의 오이를 ${amount > 0 ? '+' : ''}${amount}🥒 ${amount > 0 ? '추가' : '차감'}`);
+      save();
+      alert('조정 완료');
+    }
+
+    function toggleBan() {
+      const name = document.getElementById('adminUserList').value;
+      users[name].banned = !users[name].banned;
+      logs.push(`🚫 마스터가 ${name} 계정을 ${users[name].banned ? '정지' : '해제'}시킴`);
+      save();
+      alert(users[name].banned ? '정지됨' : '정지 해제됨');
+    }
+
+    function updateRanking() {
+      const sorted = Object.entries(users).sort((a, b) => b[1].balance - a[1].balance);
+      const list = document.getElementById('rankList');
+      list.innerHTML = '';
+      sorted.forEach(([name, data]) => {
+        list.innerHTML += `<li>${name}: ${data.balance}🥒</li>`;
+      });
+      document.getElementById('logOutput').innerText = logs.join('\n');
+    }
+  </script>
 </body>
 </html>

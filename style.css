@@ -1,72 +1,53 @@
 body {
-  font-family: 'Arial', sans-serif;
+  font-family: 'Segoe UI', sans-serif;
+  background: #f9f9f9;
   margin: 0;
-  padding: 0;
-  background-color: #f4fff0;
-  color: #333;
 }
-
-#auth-container {
+header {
+  background-color: #a3d977;
+  padding: 1rem;
   text-align: center;
-  margin-top: 50px;
+  font-size: 1.5rem;
+  color: white;
 }
-
-h1 {
-  font-size: 2em;
-}
-
-input {
-  display: block;
-  margin: 10px auto;
-  padding: 10px;
-  font-size: 1em;
-}
-
-button {
-  padding: 10px 20px;
-  margin: 5px;
-  font-size: 1em;
-  background-color: #96e072;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-button:hover {
-  background-color: #74c55b;
-}
-
-.warn {
-  color: red;
-  font-weight: bold;
-}
-
-#app-container {
+#container {
   display: flex;
 }
-
 #sidebar {
   width: 200px;
-  background-color: #d7f8c4;
-  padding: 10px;
-  min-height: 100vh;
+  background-color: #def8cc;
+  height: 100vh;
+  padding-top: 1rem;
 }
-
 #sidebar button {
-  width: 100%;
-  margin-bottom: 10px;
+  display: block;
+  margin: 1rem;
+  padding: 0.5rem;
+  width: 80%;
+  border: none;
+  background-color: #c7efb2;
+  cursor: pointer;
 }
-
 #main {
   flex-grow: 1;
-  padding: 20px;
+  padding: 1rem;
 }
-
-#content {
-  margin-top: 20px;
-  padding: 15px;
-  background: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 0 10px #ccc;
+.hidden {
+  display: none;
+}
+.user-entry {
+  margin: 0.5rem 0;
+}
+input, textarea {
+  margin-top: 0.5rem;
+  display: block;
+  padding: 0.5rem;
+  width: 100%;
+  max-width: 300px;
+}
+textarea {
+  resize: none;
+}
+.emoji {
+  font-size: 1.2rem;
 }

@@ -1,70 +1,40 @@
-/* style.css */
-/* --- 공통 --- */
-* { box-sizing: border-box; }
 body {
-  margin: 0; padding: 0;
-  font-family: 'Noto Sans KR', sans-serif;
-  background: #f4f9ff; color: #333;
+  font-family: Arial, sans-serif;
+  background-color: #f8f8f8;
+  padding: 20px;
   text-align: center;
 }
-.hidden { display: none !important; }
-.message { color: #d9534f; font-weight: 600; min-height: 1.2em; }
-.small { font-size: 0.85em; color: #666; margin-top: 5px; }
 
-/* --- 인증 섹션 --- */
-#auth-section {
-  padding: 20px;
+.sidebar-toggle {
+  font-size: 24px;
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  left: 20px;
 }
-#auth-section h1 { margin-bottom: 15px; color: #0057a0; }
-#register-section {
-  display: inline-block; text-align: left;
-  padding: 20px; background: white;
-  border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-#register-section h2 {
-  margin-top: 0; color: #0057a0;
-  border-bottom: 2px solid #0057a0; padding-bottom: 4px;
-}
-#register-section label {
-  display: block; margin-top: 10px; font-weight: 600;
-}
-#register-section input {
-  width: 100%; padding: 8px; margin-top: 4px;
-  border: 1px solid #ccc; border-radius: 4px;
-}
-#register-section button {
-  width: 100%; margin-top: 15px;
-  padding: 10px; font-size: 1em; color: white;
-  background: #0057a0; border: none;
-  border-radius: 5px; cursor: pointer;
-  transition: background 0.3s;
-}
-#register-section button:hover { background: #004080; }
-.reset-btn { background: #d9534f !important; }
-.reset-btn:hover { background: #c9302c !important; }
 
-/* --- 메인 섹션 --- */
-header {
-  background: #0057a0; color: white;
-  padding: 10px 20px; display: flex;
-  align-items: center; justify-content: space-between;
+.sidebar {
+  display: none;
+  flex-direction: column;
+  position: fixed;
+  top: 60px;
+  left: 20px;
+  background: #eee;
+  padding: 10px;
+  border-radius: 5px;
 }
-.menu-btn { font-size: 1.5em; background: none; border: none; color: white; cursor: pointer; }
-.container { display: flex; height: calc(100vh - 56px); }
-aside {
-  width: 180px; background: #eef7ff;
-  padding: 10px; box-shadow: 2px 0 6px rgba(0,0,0,0.05);
+
+.sidebar button {
+  margin: 5px 0;
+  padding: 10px;
+  border: none;
+  background: #4CAF50;
+  color: white;
+  cursor: pointer;
 }
-aside button {
-  width: 100%; padding: 10px; margin: 5px 0;
-  font-weight: 600; border: none; background: none;
-  text-align: left; cursor: pointer;
-  transition: background 0.2s;
+
+input {
+  margin: 5px;
+  padding: 8px;
+  width: 200px;
 }
-aside button:hover { background: #d4e8ff; }
-main {
-  flex-grow: 1; padding: 20px; background: white;
-  overflow-y: auto;
-}
-main h2 { margin-top: 0; color: #0057a0; }
-main p { line-height: 1.6; }

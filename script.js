@@ -1,6 +1,7 @@
 const masterId = "정후교";
 const masterPw = "302118";
 let currentUser = null;
+let isMaster = false;
 
 function saveUsers(users) {
   localStorage.setItem("users", JSON.stringify(users));
@@ -30,7 +31,7 @@ function signup() {
     return;
   }
 
-  users[id] = { pw, balance: 100 }; // 초기 오이
+  users[id] = { pw, balance: 100 };
   saveUsers(users);
   alert("가입 성공! 초기 100오이 지급!");
   showLogin();
@@ -41,20 +42,27 @@ function login() {
   const pw = document.getElementById("login-pw").value;
   const users = getUsers();
 
-  if ((id === masterId && pw === masterPw) || (users[id] && users[id].pw === pw)) {
+  if (id === masterId && pw === masterPw) {
     currentUser = id;
-    document.getElementById("login-screen").classList.add("hidden");
-    document.getElementById("signup-screen").classList.add("hidden");
-    document.getElementById("home-screen").classList.remove("hidden");
-    document.getElementById("welcome-text").innerText = `환영합니다, ${id}님!`;
-    showTab("balance");
+    isMaster = true;
+  } else if (users[id] && users[id].pw === pw) {
+    currentUser = id;
+    isMaster = false;
   } else {
     alert("로그인 실패");
+    return;
   }
+
+  document.getElementById("login-screen").classList.add("hidden");
+  document.getElementById("signup-screen").classList.add("hidden");
+  document.getElementById("home-screen").classList.remove("hidden");
+  document.getElementById("welcome-text").innerText = `환영합니다, ${id}님!`;
+  showTab("balance");
 }
 
 function logout() {
   currentUser = null;
+  isMaster = false;
   location.reload();
 }
 
@@ -83,14 +91,14 @@ function showTab(tab) {
     html = `<h2>👥 가입자 목록</h2><ul>`;
     for (let id in users) {
       html += `<li>${id}`;
-      if (currentUser === masterId) {
+      if (isMaster) {
         html += ` - ${users[id].balance} 오이`;
       }
       html += `</li>`;
     }
     html += `</ul>`;
 
-    if (currentUser === masterId) {
+    if (isMaster) {
       html += `
         <h3>💼 오이 조작</h3>
         <input id="edit-id" placeholder="대상 아이디" />
